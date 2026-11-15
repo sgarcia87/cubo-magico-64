@@ -2,11 +2,13 @@
 
 **Matemática, geometría y lectura simbólica** · Sergi Garcia Mecinas
 
+[Web en español](index.html) · [Read the website in English](en.html) · [English documentation](README.en.md)
+
 Página web estática e interactiva para presentar el proyecto *Cubo 64*: una retícula de orden **4 × 4 × 4**, una numeración definida mediante el campo finito **GF(4)**, 12 planos cuadrados mágicos de constante **64**, la estrella octángula formada por dos tetraedros regulares y una lectura simbólica de dualidad, complementariedad, equilibrio y relación entre las partes y el conjunto.
 
 ## Ver la web
 
-Abre `index.html` en el navegador. No necesita servidor, dependencias, conexión a Internet ni compilación. Se puede publicar directamente con GitHub Pages.
+Abre `index.html` para la versión en español o `en.html` para leer toda la web en inglés, incluidos los controles del visor, la guía y las auditorías. Puedes cambiar de idioma con el selector **ES / EN**. No necesita servidor, dependencias, conexión a Internet ni compilación. Se puede publicar directamente con GitHub Pages.
 
 ## Qué contiene
 

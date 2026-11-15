@@ -1,0 +1,703 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fundamentos de Cubo64 · De la dualidad al espacio y al tiempo</title>
+<meta property="og:title" content="De la dualidad al espacio y al tiempo · Exploración interactiva">
+<meta name="description" content="De la dualidad semántica al equilibrio, la síntesis y el cubo: una guía interactiva que distingue los resultados matemáticos de las interpretaciones filosóficas.">
+<style>
+:root{color-scheme:dark;--bg:#11100e;--card:#211d18;--soft:#2b251e;--edge:#504236;--cream:#f4eadb;--muted:#b8a998;--gold:#e9bd78;--teal:#7dd3cb;--good:#9bd9aa;--sun:#f3d36b}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--cream);font:14px/1.55 system-ui,-apple-system,'Segoe UI',sans-serif}
+main{max-width:1190px;margin:auto;padding:20px 15px 65px}h1,h2,h3{font-family:Georgia,serif;font-weight:500;line-height:1.2}h1{font-size:clamp(27px,4.5vw,42px);margin:5px 0 9px}h2{font-size:22px;margin:0 0 9px}h3{font-size:16px;margin:0 0 8px}p{color:var(--muted);margin:6px 0 12px}
+a{color:var(--teal)}.eyebrow{letter-spacing:.13em;color:var(--gold);font-weight:700;font-size:11px}
+.card{border:1px solid var(--edge);background:var(--card);border-radius:12px;padding:16px;margin-bottom:14px;min-width:0}
+.board{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(285px,.8fr);gap:15px}
+.stage{background:radial-gradient(ellipse at 50% 42%,#62482e,#17120e 72%);border-radius:10px;position:relative;overflow:hidden}
+.stage canvas{display:block;width:100%;height:470px;touch-action:none}.stage.small canvas{height:340px}
+.hint{position:absolute;left:9px;top:9px;color:#e4d2b6;background:#18120edc;font-size:11px;padding:5px 8px;border-radius:5px;pointer-events:none}
+.controls{display:grid;gap:12px;align-content:start}
+button,select{font:inherit;color:var(--cream);background:#362c23;border:1px solid #81684b;border-radius:8px;padding:9px 12px;cursor:pointer}
+button[aria-pressed=true]{border-color:var(--gold);background:#765537}button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+.row{display:flex;gap:7px;align-items:center;flex-wrap:wrap}label{display:grid;gap:5px;font-size:13px;color:var(--muted)}input[type=range]{width:100%;accent-color:var(--gold)}
+.kv{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid #4a3b30;padding:7px 0;font-size:13px}.kv span{color:var(--muted)}.kv strong{text-align:right}
+.note{border:1px solid #5d5239;background:#191913;border-radius:9px;color:#ded2bb;padding:12px;font-size:13px}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:17px 0}.stat{border:1px solid var(--edge);border-radius:9px;padding:12px;background:var(--card)}.stat b{display:block;font:700 26px Georgia,serif;color:var(--gold)}.stat small{color:var(--muted);font-size:12px}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}
+.tag{display:inline-block;border:1px solid #6c573d;border-radius:999px;padding:3px 9px;font-size:12px;color:var(--gold);margin:0 5px 7px 0}.minor{font-size:12px;color:var(--muted)}
+.formula{font:700 clamp(19px,3.4vw,26px) ui-monospace,monospace;color:var(--gold);letter-spacing:.02em;word-break:break-word}
+.stepTitle{font:500 20px Georgia,serif;margin:0}
+.quote{border-left:2px solid #98714a;padding:4px 10px;color:#dbccba;font-style:italic;margin:10px 0}
+.audit{border:1px solid #584c39;border-radius:7px;padding:8px 10px;margin:6px 0;font-size:13px}.ok{color:var(--good)}.fail{color:#f6a49c}
+.dots{display:flex;gap:5px;flex-wrap:wrap}.dots button{width:30px;height:30px;padding:0;border-radius:50%;font:600 12px ui-monospace,monospace}
+.parts{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px}.part{border:1px solid #584a3b;border-radius:9px;padding:10px;background:#191510;font-size:12.5px;color:#d9cab6}.part b{display:block;color:var(--gold);font:600 12px system-ui;letter-spacing:.08em;margin-bottom:4px}.part i{display:block;color:var(--muted);font-size:11.5px;margin-top:6px;font-style:normal}
+.fib{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:3px;margin:8px 0}.fib div{aspect-ratio:1;display:grid;place-items:center;border-radius:4px;font:600 13px ui-monospace,monospace;background:#2b241c;border:1px solid #5b4735}.fib .a{color:#f1d5a2}.fib .b{color:#bff0ea}.fib .s{background:transparent;border:none;color:var(--muted);font-size:11px}.fib div.hl{background:#765537;border-color:var(--gold)}
+.temps{display:grid;gap:6px;margin-top:8px}.temps div{display:flex;justify-content:space-between;border:1px solid #584c39;border-radius:7px;padding:7px 10px;font-size:13px}.verdict{font-weight:700}
+.symbolon{display:flex;justify-content:center;align-items:center;height:110px;margin:6px 0}.half{width:44px;height:88px;background:linear-gradient(135deg,#e9bd78,#a97543);transition:transform .9s cubic-bezier(.5,0,.2,1)}.half.l{border-radius:44px 0 0 44px;clip-path:polygon(0 0,100% 0,82% 22%,100% 45%,78% 66%,100% 100%,0 100%)}.half.r{border-radius:0 44px 44px 0;background:linear-gradient(135deg,#7dd3cb,#3d8f88);clip-path:polygon(0 0,100% 0,100% 100%,0 100%,22% 66%,0 45%,18% 22%)}.symbolon.open .l{transform:translateX(-46px) rotate(-8deg)}.symbolon.open .r{transform:translateX(46px) rotate(8deg)}
+.legend{display:flex;justify-content:center;gap:7px;flex-wrap:wrap;padding:8px 6px 11px;background:#17120e}.legend span{border:1px solid #5b4735;color:#f7ecda;padding:5px 9px;border-radius:7px;font-size:12px;white-space:nowrap}.legend .g{border-color:#e9bd78}.legend .t{border-color:#7dd3cb}.legend .y{border-color:#f3d36b}
+footer{color:var(--muted);font-size:12px;text-align:center;margin-top:24px}
+@media(max-width:850px){.board,.two{grid-template-columns:1fr}.three{grid-template-columns:1fr}.parts{grid-template-columns:repeat(2,minmax(0,1fr))}.stage canvas{height:390px}}
+@media(max-width:490px){.stats{grid-template-columns:repeat(2,1fr)}.stage canvas{height:340px}.stage.small canvas{height:300px}.card{padding:12px}.fib div{font-size:11px}}
+
+/* Fundamentos: grafos de coherencia y analogía cuantitativa */
+.foundation-head{max-width:910px}.foundation-head p{font-size:14px}
+.found-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.found-panel{border:1px solid #64503b;background:#191611;border-radius:11px;padding:15px;min-width:0}
+.found-panel h3{font-size:20px;margin:0 0 8px}.found-panel .stage canvas{height:365px}
+.found-steps{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}.found-steps button{font-size:12px;padding:7px 9px;min-height:35px;flex:1 1 auto}
+.found-mini{color:#c6b8a5;font-size:12px}.found-caption{font-size:13px;color:#dfd0bc;min-height:77px;margin-top:10px}
+.found-inputs{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.found-values{font:600 13px ui-monospace,monospace;color:#f6e2ba;margin-top:7px;line-height:1.7}
+.found-badge{display:inline-block;border:1px solid #766044;padding:2px 8px;border-radius:999px;color:#dfc7a1;font-size:11px;margin:5px 5px 3px 0}
+.found-go{display:inline-block;margin-top:9px;color:#86d5cc;font-weight:650}
+.criteria-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px}
+.criteria-step{background:#1b1713;border:1px solid #574635;border-radius:9px;padding:14px}.criteria-step span{font-size:11px;color:var(--gold);font-weight:700;letter-spacing:.08em}.criteria-step h3{font-size:18px;margin:8px 0}.criteria-step p{font-size:13px}.criteria-form{font:600 12px ui-monospace,monospace;color:#ccece8;padding:9px;background:#15120e;border:1px solid #4e3f30;border-radius:6px;overflow-wrap:anywhere}
+.criteria-experiment{margin-top:14px;display:grid;grid-template-columns:minmax(140px,230px) 1fr;gap:10px;align-items:center}.criteria-experiment .note{grid-column:1/-1}.criteria-experiment label{font-size:13px}.compact-details{margin-top:12px;border:1px solid #594b3a;border-radius:9px;padding:12px}.compact-details summary{cursor:pointer;color:var(--gold);font-weight:600}
+.advance-layout{display:grid;gap:12px}.advance-details{border:1px solid #62503b;border-radius:10px;background:#17130f;padding:13px}.advance-details>summary{list-style:none;cursor:pointer;color:var(--cream);font-size:17px;font-family:Georgia,serif;display:flex;justify-content:space-between;gap:14px;align-items:center}.advance-details>summary::-webkit-details-marker{display:none}.advance-details>summary:before{content:'+';color:var(--gold);font-family:system-ui;font-size:21px}.advance-details[open]>summary:before{content:'−'}.advance-details summary span{font:500 11px system-ui;color:var(--muted)}.advance-details>.card{margin-top:13px;margin-bottom:0}
+@media(max-width:850px){.found-grid{grid-template-columns:1fr}}
+@media(max-width:640px){.criteria-grid{grid-template-columns:1fr}.criteria-experiment{grid-template-columns:1fr}.advance-details>summary{font-size:15px}.advance-details summary span{display:none}}
+@media(max-width:490px){.found-panel{padding:10px}.found-panel .stage canvas{height:325px}.found-inputs{gap:8px}.found-steps button{font-size:11px}}
+
+/* Un recorrido: de la relación al estado y su comparación */
+.intro{font-size:clamp(15px,1.8vw,18px);max-width:920px;color:#dacbb8}.journey{display:flex;gap:7px;flex-wrap:wrap;margin:16px 0 21px}.journey a{font:600 12px system-ui;text-decoration:none;color:#f0dcb9;background:#2c2319;border:1px solid #685239;border-radius:99px;padding:7px 11px}.journey a:hover{background:#4a3725}
+.lens-grid,.snapshot-grid,.observer-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.lens-panel{background:#191611;border:1px solid #5b4935;border-radius:11px;padding:15px;min-width:0}.lens-panel p{font-size:13px}.lens-panel h3{font:500 19px Georgia,serif}.lens-k{color:var(--gold);font-size:11px;letter-spacing:.11em;font-weight:750}.lens-stage{height:225px;border:1px solid #4b3b2c;border-radius:9px;background:radial-gradient(ellipse at center,#30261b,#15110d)}.lens-stage svg{width:100%;height:100%}.lens-buttons{display:flex;justify-content:center;gap:6px;margin:10px 0}.lens-buttons button{font-size:12px;padding:7px 14px}.lens-readout{color:#efe0ca;font-size:13px;min-height:34px;margin:9px 0}
+.snapshot{min-width:0;border:1px solid #64503a;background:#1a1612;border-radius:11px;padding:12px}.snapshot svg{width:100%;max-height:190px;display:block;border-radius:10px}.snap-head{display:flex;justify-content:space-between;gap:6px;align-items:center;font-size:13px;margin-bottom:9px}.snap-head span{font-size:11px;color:var(--muted)}.snapshot-tools{display:grid;grid-template-columns:1fr 1fr auto;gap:13px;align-items:end;margin:15px 0}.snapshot-tools button{min-height:40px}.snap-ladder{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:14px}.snap-ladder>div{border-left:2px solid #9b7648;background:#231c15;padding:10px;border-radius:5px}.snap-ladder b{display:block;color:#f4e3c8}.snap-ladder span{font-size:12px;color:var(--muted)}.sense-switch{display:flex;align-items:center;gap:9px;font-size:13px;padding:8px 0}.sense-switch input{accent-color:var(--teal);width:16px;height:16px}.observer-grid .note p{font-size:13px}.observer-grid #observerResult{padding-top:8px;line-height:1.7}
+.research-path{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:17px 0}.research-path article{min-width:0;background:#1a1612;border:1px solid #5a4632;border-radius:10px;padding:14px}.research-path article span{font:700 11px system-ui;letter-spacing:.09em;color:var(--gold)}.research-path article h3{font-size:18px;margin:8px 0}.research-path article h3 a{color:#f4eada}.research-path article p{font-size:13px}.mini-code{font:12px/1.65 ui-monospace,monospace;border:1px solid #443a2f;border-radius:7px;padding:8px;color:#bde8df;background:#15110f;overflow-wrap:anywhere}
+.audit-play{border:1px solid #705336;border-radius:10px;padding:16px;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(210px,.8fr);gap:18px;background:#1a1712}.audit-controls{display:grid;gap:9px}.audit-output{font-size:13px;align-self:center;line-height:1.8}.audit-output strong{color:#a8e0d4}.scope-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}.scope-grid article{background:#1b1712;border:1px solid #574938;border-radius:8px;padding:13px}.scope-grid b{color:#e9bd78}.scope-grid p{font-size:12px}
+@media(max-width:900px){.research-path{grid-template-columns:repeat(2,minmax(0,1fr))}.scope-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.snapshot-tools{grid-template-columns:1fr 1fr}.snapshot-tools button{grid-column:1/-1}}
+@media(max-width:650px){.lens-grid,.snapshot-grid,.observer-grid,.research-path,.audit-play{grid-template-columns:1fr}.snapshot-tools{grid-template-columns:1fr}.snapshot-tools button{grid-column:auto}.snap-ladder{grid-template-columns:1fr}.scope-grid{grid-template-columns:1fr 1fr}.journey{gap:5px}.journey a{font-size:11px;padding:6px 8px}}
+
+
+/* Integración semántica y Cubo64 · controles accesibles también en móvil */
+.intro-back{display:flex;gap:10px;flex-wrap:wrap;align-items:center;font-size:12px;margin:3px 0 14px}.intro-back a{color:#a5e6dc;font-weight:650}.intro-back span{color:#7d6b55}
+.diff-lesson{border:1px solid #8e6d43;border-radius:13px;background:linear-gradient(140deg,#261d14,#17130e);padding:21px;margin-top:19px}.diff-lesson h3{font-size:clamp(23px,3vw,30px);margin:4px 0 12px}.diff-lesson h4{font:500 19px Georgia,serif;margin:0 0 9px}.diff-eyebrow{font-size:11px;font-weight:750;letter-spacing:.12em;color:#e9bd78}.diff-lesson p{font-size:13px}.diff-explain-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:15px 0}.diff-explain-grid article{padding:13px;background:#1c1915;border:1px solid #62503c;border-radius:10px}.diff-explain-grid b{color:#f3d7ae}.diff-explain-grid p{margin:8px 0 0}.diff-eq{padding:17px 9px;border:1px solid #786041;border-radius:10px;background:#130f0c;color:#f1d1a1;text-align:center;font:650 clamp(15px,2.7vw,23px) ui-monospace,monospace;overflow-wrap:anywhere;margin:15px 0}.diff-lab-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.diff-input-panel,.diff-display-panel{background:#1a1611;border:1px solid #5d4933;border-radius:10px;padding:14px;min-width:0}.diff-presets{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0}.diff-presets button{font-size:12px;padding:7px 9px}.diff-bars{display:grid;gap:12px;margin:16px 0}.diff-bars label{display:flex;justify-content:space-between;gap:10px;color:#dbccbc;font-size:12px}.diff-track{height:14px;border-radius:99px;overflow:hidden;background:#3b3025;border:1px solid #756045}.diff-track span{display:block;height:100%;width:60%;background:#7dd3cb;transition:width .15s ease}.diff-track #diffBarB{background:#e9bd78}.diff-triad{display:flex;gap:5px;align-items:center;justify-content:space-between;position:relative;isolation:isolate;margin:4px 0 10px}.diff-triad:before{content:'';position:absolute;top:50%;left:10%;right:10%;height:2px;background:#937651;z-index:-1}.diff-pole,.diff-mid{border-radius:9px;padding:9px;min-width:0;text-align:center;background:#2c231b;border:1px solid #826548;font-size:12px}.diff-mid{background:#16413e;border-color:#5bb1ab}.diff-mid b{color:#c6f7ec}.diff-display-panel .audit-output{line-height:1.65}.diff-note{background:#14120f;border-left:3px solid #8e724b;padding:11px;margin:14px 0}.diff-comparison{margin-top:15px;background:#191611;border:1px solid #6b533a;padding:15px;border-radius:10px}.diff-check{display:flex;align-items:flex-start;gap:8px;font-size:13px;cursor:pointer;color:#ede0cd;margin:12px 0}.diff-check input{accent-color:#7dd3cb;flex:none;margin-top:3px;width:16px;height:16px}.diff-table-wrap{overflow-x:auto}.diff-table{width:100%;border-collapse:collapse;font-size:12px}.diff-table th,.diff-table td{text-align:left;padding:10px;border-bottom:1px solid #4a3d2b}.diff-table th{color:#e9bd78;white-space:nowrap}.diff-table tr[aria-disabled="true"]{opacity:.5}.diff-table-result{padding:12px;margin:10px 0;background:#14201b;border-radius:7px;border:1px solid #3a695b;color:#c7ebdc;font-size:13px}.diff-summary{margin-top:14px;border:1px solid #6c5a37;background:#242017;padding:14px;border-radius:9px;color:#d8d2be;font-size:13px}.diff-summary b{color:#f0d7af}
+.cubo-bridge-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(260px,.8fr);gap:16px;margin:17px 0}.cubo-bridge-story{display:grid;gap:8px}.cubo-bridge-step{display:flex;gap:14px;border:1px solid #5a4835;padding:13px;background:#191510;border-radius:9px}.cubo-bridge-step>strong{display:grid;place-items:center;flex:none;width:32px;height:32px;color:#e9bd78;border:1px solid #83663e;border-radius:99px;font-size:13px}.cubo-bridge-step b{color:#f5e4c8}.cubo-bridge-step p{margin:5px 0 0;font-size:12px}.cubo-bridge-example{padding:15px;border:1px solid #856847;border-radius:10px;background:#241e17}.cubo-bridge-example h3{margin:9px 0 15px}.cubo-mini-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;max-width:330px;margin:auto}.cubo-mini-grid button{aspect-ratio:1;border-radius:7px;padding:0;background:#e7c897;color:#261a10;font:700 clamp(15px,2.1vw,23px) ui-monospace,monospace;border:1px solid #a38257}.cubo-mini-grid button[aria-pressed="true"]{background:#80d9cd;border-color:#b8fff0}.cubo-bridge-math{padding:11px;min-height:56px;border:1px solid #5d4b34;border-radius:7px;margin:13px 0;font:12px/1.65 ui-monospace,monospace;color:#d9d2bd}.cubo-action{display:inline-block;background:#9a7242;color:#fff3dd;padding:10px 13px;text-decoration:none;border-radius:8px;font-weight:650}
+@media(max-width:950px){.diff-explain-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:750px){.cubo-bridge-grid,.diff-lab-grid{grid-template-columns:1fr}}@media(max-width:450px){.diff-lesson{padding:12px}.diff-explain-grid{grid-template-columns:1fr}.diff-table th,.diff-table td{padding:8px 5px;font-size:11px}.diff-triad{gap:4px}.diff-pole,.diff-mid{font-size:11px;padding:6px}}
+</style></head><body><main id="inicio">
+
+<div class="eyebrow">CUBO64 · FUNDAMENTOS CONCEPTUALES · SERGI GARCIA MECINAS</div>
+<h1>De la dualidad al espacio.<br>Del cambio al tiempo.</h1>
+<p class="intro-back"><a href="index.html#explorar">← Explorar Cubo64 en 3D</a> <span>·</span> <a href="index.html#matematica">Ver su construcción matemática</a> <span>·</span> <a href="en.html">English Cubo64</a></p>
+<p class="intro">¿Qué necesita una idea para adquirir sentido? ¿Cómo pasamos de comparar <b>frío</b> y <b>calor</b> a describir un espacio, reconocer un cambio y hablar de <b>tiempo</b>? Este recorrido pone a dialogar una propuesta filosófica con modelos matemáticos comprobables de IA_m, difracción semántica, geometría discreta y Q12. <b>Una analogía no se convierte en ley física por dibujarla.</b></p>
+<nav class="journey" aria-label="Recorrido conceptual"><a href="#fundamentos">01 · Dualidad</a><a href="#criterios">02 · Síntesis</a><a href="#doble-lectura">03 · Cantidad / cualidad</a><a href="#escalera">04 · Espacio</a><a href="#tiempo-relacional">05 · Tiempo</a><a href="#observador">06 · Percepción</a><a href="#modelos">08 · Modelos</a><a href="#cubo-enlace">09 · Cubo64</a><a href="#profundizar">Ampliaciones</a></nav>
+<div class="stats"><div class="stat"><b>2</b><small>Polos que comparamos</small></div><div class="stat"><b>3</b><small>Polos + equilibrio contextual</small></div><div class="stat"><b>A → B</b><small>Estados que permiten reconocer cambio</small></div><div class="stat"><b>2¹²</b><small>4096 estados posibles en Q12</small></div></div>
+
+
+<section class="card" id="fundamentos" aria-labelledby="fund-title">
+ <div class="foundation-head">
+  <div class="eyebrow">ANTES DE LA GEOMETRÍA · LA RELACIÓN</div>
+  <h2 id="fund-title">01 · Primero, una diferencia que adquiere sentido</h2>
+  <p>Antes de llegar al cubo, necesitamos entender qué representa una línea. En este modelo, un concepto toma sentido <b>por comparación</b>. Decimos «calor» frente a «frío»: los términos se delimitan mutuamente dentro de un mismo campo semántico. Esto no significa que el fenómeno físico del calor deje de existir sin las palabras, sino que <b>sus significados son relacionales</b>.</p>
+  <p>Dos conceptos pueden unirse mediante una <b>línea de coherencia semántica</b> si comparten un criterio que permite compararlos. La línea representa una <b>relación</b>, no una distancia física. En algunos casos podemos proponer un equilibrio intermedio, una síntesis de la relación y una categoría integradora. <b>No son pasos automáticos ni sinónimos</b>: cada salto requiere una justificación distinta. Los nombres 1D, 2D y 3D designan el dibujo, no dimensiones físicas del lenguaje.</p>
+ </div>
+ <div class="found-grid">
+  <article class="found-panel" aria-labelledby="sem-title">
+   <span class="found-badge">Recorrido semántico</span><h3 id="sem-title">Frío ↔ Calor → Templado → Temperatura</h3>
+   <div class="stage small"><canvas id="cvSemantic" aria-label="Representación interactiva de frío y calor unidos por una línea, templado como tercer concepto y temperatura como categoría integradora en 3D">Tu navegador no puede mostrar el diagrama interactivo.</canvas><div class="hint">0D → 1D → 2D → 3D</div></div>
+   <div class="found-steps" role="group" aria-label="Etapas de la relación semántica">
+    <button type="button" data-sem-step="0" aria-pressed="false">0D · Concepto</button>
+    <button type="button" data-sem-step="1" aria-pressed="true">1D · Dualidad</button>
+    <button type="button" data-sem-step="2" aria-pressed="false">2D · Templado</button>
+    <button type="button" data-sem-step="3" aria-pressed="false">3D · Temperatura</button>
+   </div>
+   <p class="found-caption" id="semExplanation" aria-live="polite"></p>
+   <p class="found-mini"><b>Importante:</b> «templado» es un equilibrio <i>contextual</i> de percepción, no un grado universal. «Temperatura» es una magnitud medible que nos permite situar los tres calificativos. Es una categoría integradora del ejemplo, no un resultado físico generado por el triángulo.</p>
+  </article>
+  <article class="found-panel" aria-labelledby="quant-title">
+   <span class="found-badge">Ejemplo cuantitativo</span><h3 id="quant-title">Operaciones inversas y promedio</h3>
+   <div class="stage small"><canvas id="cvQuant" aria-label="Ejes de operaciones inversas: suma y resta; multiplicación y división; cuadrado y raíz cuadrada, con promedio central">Tu navegador no puede mostrar el diagrama interactivo.</canvas><div class="hint">Arrastra para girar en 3D</div></div>
+   <div class="found-steps" role="group" aria-label="Etapas de las operaciones cuantitativas">
+    <button type="button" data-quant-step="1" aria-pressed="false">1D · + / −</button>
+    <button type="button" data-quant-step="2" aria-pressed="false">2D · × / ÷</button>
+    <button type="button" data-quant-step="3" aria-pressed="true">3D · x² / √</button>
+   </div>
+   <div class="found-inputs">
+    <label>Valor A: <b id="quantAValue">4</b><input id="quantA" type="range" min="1" max="20" step="1" value="4"></label>
+    <label>Valor B: <b id="quantBValue">12</b><input id="quantB" type="range" min="1" max="20" step="1" value="12"></label>
+   </div>
+   <div class="found-values" id="quantCalculations" aria-live="polite"></div>
+   <p class="found-caption" id="quantExplanation" aria-live="polite"></p>
+   <p class="found-mini">El <b>promedio aritmético</b> de A y B es (A+B)/2: es el punto medio de los <i>valores</i>, no de los símbolos +, −, × y ÷. La resta invierte una suma por una cantidad fija; dividir por un número distinto de cero invierte multiplicar por él; y √(m²) = m solo si m ≥ 0. Dibujar estos pares sobre tres ejes es una <b>analogía geométrica</b>, no una clasificación matemática estándar.</p>
+  </article>
+ </div>
+ <div class="note" style="margin-top:14px"><b>De la idea al cubo.</b> Una relación puede representarse con una arista. Dos criterios <em>independientes</em> pueden representarse con dos ejes y tres con tres. El cubo geométrico usa tres coordenadas binarias independientes (izquierda/derecha, abajo/arriba y detrás/delante), pero <b>el salto desde un grafo semántico hasta un espacio euclidiano no es una consecuencia necesaria</b>: necesitamos elegir una representación, definir los ejes y justificar las correspondencias. <a class="found-go" href="#escalera">Continuar con la escalera de dimensiones ↓</a></div>
+</section>
+
+<section class="card" id="criterios" aria-labelledby="criteria-title">
+ <div class="eyebrow">EL PUENTE ENTRE SEMÁNTICA Y GEOMETRÍA</div>
+ <h2 id="criteria-title">02 · Del contraste a una relación integradora</h2>
+ <p>En un grafo conceptual, los <b>nodos</b> representan ideas; las <b>aristas</b>, relaciones identificadas. Dibujar una arista significa que podemos explicar <i>en qué sentido</i> se relacionan sus extremos. Un tercer nodo no aparece necesariamente de la pareja: es una <b>hipótesis que hay que nombrar y defender</b>.</p>
+ <div class="criteria-grid">
+  <div class="criteria-step"><span>01 · Contraste</span><h3>¿Qué comparten?</h3><p>Frío y calor se oponen dentro de un mismo ámbito perceptivo. La línea expresa esa relación; no prueba dependencia física.</p><div class="criteria-form">FRÍO ↔ CALOR</div></div>
+  <div class="criteria-step"><span>02 · Equilibrio</span><h3>¿Existe un intermedio?</h3><p>«Templado» designa una posición intermedia <em>según un observador y un contexto</em>. No equivale siempre a la media de dos temperaturas.</p><div class="criteria-form">FRÍO — TEMPLADO — CALOR</div></div>
+  <div class="criteria-step"><span>03 · Síntesis</span><h3>¿Qué relación integramos?</h3><p>La síntesis del modelo es comprender los tres términos como posiciones relacionadas de un mismo continuo térmico percibido. No es otra palabra que sustituye a «templado».</p><div class="criteria-form">TRÍADA → RELACIÓN CONJUNTA</div></div>
+  <div class="criteria-step"><span>04 · Categoría</span><h3>¿Qué concepto los abarca?</h3><p>«Temperatura» ofrece una magnitud común para caracterizar situaciones a las que atribuimos frío, templado o calor; esos calificativos dependen de otros factores.</p><div class="criteria-form">↑ TEMPERATURA</div></div>
+ </div>
+ <div class="criteria-experiment">
+  <label for="relationCase">Pon a prueba la coherencia de una pareja:</label>
+  <select id="relationCase"><option value="thermal">Frío ↔ Calor</option><option value="temporal">Pasado ↔ Futuro</option><option value="arithmetic">Suma ↔ Resta</option><option value="unrelated">Frío ↔ Triángulo</option></select>
+  <div class="note" id="relationResult" aria-live="polite"></div>
+ </div>
+ <details class="compact-details"><summary>Por qué una línea de coherencia no es automáticamente un eje espacial</summary><p>Una relación semántica puede ser de oposición, pertenencia, causalidad, proximidad o analogía. Un eje numérico requiere, además, una variable y una regla para situar valores en él. Un dibujo 1D, 2D o 3D ayuda a pensar, pero no demuestra que los conceptos tengan esas dimensiones físicas. El cubo sí tiene una definición matemática precisa: sus vértices son las ocho combinaciones de tres coordenadas binarias independientes.</p></details>
+ <p class="minor"><b>Ruta de lectura:</b> identifica la relación, plantea el equilibrio, pregunta qué síntesis se justifica y nombra la categoría. Después veremos por qué una descripción <em>cuantitativa</em> no es lo mismo que una <em>cualitativa</em>. <a href="#doble-lectura">Comparar las dos lecturas ↓</a></p>
+</section>
+
+
+
+<section class="card" id="doble-lectura">
+ <div class="eyebrow">EL MISMO FENÓMENO · DOS PREGUNTAS</div>
+ <h2>03 · Cantidad y cualidad: medir y relacionar</h2>
+ <p>Un fenómeno puede describirse en términos <strong>cuantitativos</strong> («¿cuánto?, ¿dónde?, ¿cuántas combinaciones?») y <strong>cualitativos</strong> («¿cómo es?, ¿qué cambia?, ¿qué significa para un observador?»). No son mundos rivales: son dos formas complementarias de seleccionar información de <em>un mismo fenómeno</em>.</p>
+ <div class="lens-grid">
+  <article class="lens-panel"><div class="lens-k">CUANTITATIVO · MEDIDAS Y COORDENADAS</div><h3>Del segmento al cuadrado y al cubo</h3>
+   <div class="lens-stage"><svg id="svgQuantity" viewBox="0 0 360 215" role="img" aria-label="Figuras derivadas de uno, dos o tres ejes binarios independientes"></svg></div>
+   <div class="lens-buttons" role="group" aria-label="Número de ejes medibles"><button data-qaxes="1">1 eje</button><button data-qaxes="2">2 ejes</button><button data-qaxes="3" aria-pressed="true">3 ejes</button></div>
+   <div id="quantityReadout" class="lens-readout" aria-live="polite"></div>
+   <p>Con dos elecciones independientes en cada eje se obtienen <strong>2ⁿ vértices</strong>: segmento (2), cuadrado (4), cubo (8). Esta parte describe un <b>espacio matemático medible</b> cuando definimos coordenadas, unidades o distancias; las operaciones por sí solas no crean un espacio físico.</p>
+  </article>
+  <article class="lens-panel"><div class="lens-k">CUALITATIVO · RELACIONES Y TRANSFORMACIONES</div><h3>De la oposición al triángulo y a la comparación</h3>
+   <div class="lens-stage"><svg viewBox="0 0 360 215" role="img" aria-label="Frío y calor conectados a templado como triángulo y dos estados comparados en el tiempo">
+     <path d="M30 161 L151 161 L90.5 42 Z" fill="rgba(233,189,120,.09)" stroke="#e9bd78" stroke-width="2"/>
+     <circle cx="30" cy="161" r="6" fill="#7dd3cb"/><circle cx="151" cy="161" r="6" fill="#e9bd78"/><circle cx="90.5" cy="42" r="7" fill="#f3d36b"/>
+     <g text-anchor="middle" font-size="12" fill="#f4eadb"><text x="30" y="180">Frío</text><text x="151" y="180">Calor</text><text x="90.5" y="28">Templado</text></g>
+     <path d="M180 98 L219 98" stroke="#e9bd78" stroke-width="2" stroke-dasharray="5 5"/><path d="M213 92 L220 98 L213 104" fill="none" stroke="#e9bd78" stroke-width="2"/>
+     <rect x="234" y="33" width="96" height="58" rx="7" fill="#2f251b" stroke="#b99767"/><rect x="234" y="123" width="96" height="58" rx="7" fill="#2f251b" stroke="#b99767"/>
+     <circle cx="257" cy="62" r="9" fill="#7dd3cb"/><circle cx="306" cy="152" r="9" fill="#e9bd78"/>
+     <path d="M282 96 L282 117 M277 112 L282 117 L287 112" stroke="#7dd3cb" fill="none" stroke-width="2"/>
+     <g text-anchor="middle" font-size="12" fill="#f4eadb"><text x="282" y="24">Estado A</text><text x="282" y="196">Estado B</text></g>
+   </svg></div>
+   <div class="lens-readout"><b>Triángulo:</b> polos y equilibrio. <b>Secuencia:</b> cualidades observadas antes y después.</div>
+   <p>Un triángulo es una <strong>forma útil de dibujar tres relaciones</strong>, no una dimensión cualitativa obligatoria. La propuesta de que el tiempo es «la cualidad del espacio» se desarrollará así: <b>lo que reconocemos como transformación del espacio al comparar estados</b>. En física, el tiempo no se deduce de esta analogía.</p>
+  </article>
+ </div>
+ <div class="note" style="margin-top:14px"><b>Las dos caras de una misma observación:</b> «un objeto está a 3 metros y 20 °C» son datos cuantitativos; «se ha acercado» o «se siente templado» son descripciones relacionales y cualitativas. Una categoría cualitativa también puede medirse operacionalmente, y una medida requiere interpretar qué se está midiendo. <a href="#escalera">Construir un espacio de ejes ↓</a></div>
+</section>
+
+<section class="card" id="escalera"><h2>04 · Cómo se dibujan los ejes y sus combinaciones</h2>
+<p>Diez pasos de la propuesta, desde la primera distinción hasta una representación de doce coordenadas. El segmento, el cuadrado y el cubo son construcciones exactas; atribuirles significados conceptuales o temporales exige una interpretación adicional. Los pasos 1–8 explican el recorrido geométrico inicial; los pasos 9–10 presentan extensiones más abstractas, <b>no dimensiones físicas verificadas de la realidad</b>. Usa los botones o el deslizador y gira las figuras tridimensionales con el dedo.</p>
+<div class="board"><div><div class="stage"><canvas id="cvMain" aria-label="Visor de la escalera de dimensiones"></canvas><div class="hint" id="mainHint">Paso 1 de 10</div></div>
+<p class="minor" id="ladderLevel" aria-live="polite">Nivel inicial · fundamentos geométricos</p><div class="row" style="margin-top:10px"><button id="prev">◀ Anterior</button><button id="next">Siguiente ▶</button><button id="flip" aria-pressed="false">Invertir signo</button><button id="auto" aria-pressed="true">Movimiento</button></div>
+<label style="margin-top:10px">Paso · <span id="stepLabel">1 / 10</span><input type="range" id="stepRange" min="0" max="9" value="0"></label>
+<div class="dots" id="dots" style="margin-top:8px"></div></div>
+<div class="controls"><p class="stepTitle" id="sTitle"></p><div class="formula" id="sFormula"></div>
+<div class="kv"><span>Vértices</span><strong id="sV"></strong></div><div class="kv"><span>Con el centro</span><strong id="sC"></strong></div><div class="kv"><span>Dimensión</span><strong id="sD"></strong></div><div class="kv" id="sAngRow"><span>Ángulos</span><strong id="sAng"></strong></div>
+<div class="note" id="sText"></div>
+<div class="row" id="sExtra"></div></div></div></section>
+
+<section class="card" id="tiempo-relacional">
+ <div class="eyebrow">PRIMERA SECUENCIA · NO UNA FIGURA AISLADA</div>
+ <h2>05 · Dos fotografías de un espacio: aparece la posibilidad de reconocer cambio</h2>
+ <p>Imagina dos fotografías de <strong>un mismo espacio</strong>. Una sola describe un estado; comparando dos podemos detectar <b>diferencias</b>. Si además sabemos cuál ocurrió primero, las interpretamos como <b>transformación</b>. Y si disponemos de un reloj que las fecha, podemos medir <b>duración y velocidad</b>. Aquí está el puente entre el espacio cuantificable y la cualidad de su cambio.</p>
+ <div class="snapshot-grid">
+  <div class="snapshot"><div class="snap-head"><strong>Estado A</strong><span id="stampA">antes · t = 0 s</span></div><svg id="photoA" viewBox="0 0 320 190" aria-label="Primera fotografía de un espacio"><rect x="0" y="0" width="320" height="190" rx="10" fill="#211b16"/><path d="M25 48 H296 M25 96 H296 M25 144 H296 M80 22 V168 M160 22 V168 M240 22 V168" stroke="#554332" opacity=".7"/><circle id="dotA" cx="92" cy="110" r="18" fill="#7dd3cb"/><text id="tA" x="18" y="25" fill="#f4eadb" font-size="13">20 °C</text><text id="lA" x="300" y="25" fill="#d6b68a" font-size="13" text-anchor="end">Luz: 50</text></svg></div>
+  <div class="snapshot"><div class="snap-head"><strong>Estado B</strong><span id="stampB">después · t = 4 s</span></div><svg id="photoB" viewBox="0 0 320 190" aria-label="Segunda fotografía del mismo espacio"><rect x="0" y="0" width="320" height="190" rx="10" fill="#211b16"/><path d="M25 48 H296 M25 96 H296 M25 144 H296 M80 22 V168 M160 22 V168 M240 22 V168" stroke="#554332" opacity=".7"/><circle id="dotB" cx="244" cy="110" r="18" fill="#e9bd78"/><text id="tB" x="18" y="25" fill="#f4eadb" font-size="13">20 °C</text><text id="lB" x="300" y="25" fill="#d6b68a" font-size="13" text-anchor="end">Luz: 50</text></svg></div>
+ </div>
+ <div class="snapshot-tools"><label for="changeCase">Qué cambia entre A y B<select id="changeCase"><option value="movement">Posición del objeto</option><option value="heat">Temperatura</option><option value="light">Iluminación</option><option value="none">Nada visible en estos canales</option></select></label><label for="photoInterval">Intervalo marcado por un reloj · <b id="intervalLabel">4 s</b><input id="photoInterval" type="range" min="1" max="12" step="1" value="4"></label><button id="reversePhotos" type="button" aria-pressed="false">Invertir orden A / B</button></div>
+ <div class="note" id="photoDifference" aria-live="polite"></div>
+ <div class="snap-ladder">
+  <div><b>Una foto</b><span>Estado del espacio: qué hay y dónde.</span></div><div><b>Dos fotos</b><span>Comparación: qué es igual y qué ha cambiado.</span></div><div><b>Orden y reloj</b><span>Sucesión y duración: cuándo y cuánto tarda.</span></div>
+ </div>
+ <div class="two" style="margin-top:14px"><div class="note"><b>La lectura filosófica.</b> Podemos llamar al cambio observado «cualidad del espacio»: lo que se transforma, permanece o se diferencia entre estados. No implica que la dimensión física del tiempo sea producida por un observador ni que dos imágenes basten para determinar un intervalo real.</div><div class="note"><b>La analogía algebraica.</b> <code>(−1) × (−1) = +1</code> es una igualdad exacta: combinar dos signos mediante la multiplicación determina un resultado. Puede inspirar la idea de síntesis relacional, pero el signo <code>=</code> expresa <em>igualdad</em>, no un nuevo ser o una prueba de que una comparación genere tiempo.</div></div>
+ <details class="compact-details"><summary>La espiral temporal como metáfora de la vivencia subjetiva</summary><p>Una vez distinguido el cambio detectable del tiempo medido, podemos visualizar cómo una duración idéntica <em>puede sentirse</em> distinta. La espiral no representa una ley física del tiempo.</p>
+ <section class="card" id="tiempo"><h2>Metáfora · El tiempo como espiral</h2>
+<p>La línea del reloj representa el tiempo medido; la espiral simboliza cómo puede sentirse subjetivamente su transcurso. La dilatación o contracción psicológica representada aquí no es una ley física ni debe confundirse con la relatividad del tiempo.</p>
+<div class="board"><div><div class="stage small"><canvas id="cvTime" aria-label="Espiral del tiempo sobre la línea del reloj"></canvas></div></div>
+<div class="controls"><div class="row"><button data-r="0.35" class="tpre">Disfrutando</button><button data-r="1" class="tpre" aria-pressed="true">Día corriente</button><button data-r="1.7" class="tpre">Aburrimiento</button><button data-r="2.6" class="tpre">Una mosca</button></div>
+<label>Diámetro de la espiral · <span id="tLabel"></span><input type="range" id="tR" min="0.2" max="2.8" step="0.01" value="1"></label>
+<div class="kv"><span>Avance del reloj</span><strong>1 unidad</strong></div><div class="kv"><span>Recorrido en la espiral</span><strong id="tFactor"></strong></div>
+<div class="note" id="tText"></div>
+<p class="minor">Metáfora del texto: el «factor» es longitud de curva por unidad del reloj de referencia; no cuantifica la consciencia, la neurofisiología ni la dilatación temporal relativista.</p></div></div></section>
+ </details>
+</section>
+
+<section class="card" id="observador">
+ <div class="eyebrow">DEL CAMBIO A QUIEN LO DESCRIBE</div>
+ <h2>06 · Percepción: cuántas diferencias distinguimos y cómo las interpretamos</h2>
+ <p>Un observador no recibe «todo el mundo», sino señales a través de canales y criterios. Dos observadores pueden comparar <em>el mismo par de estados</em> y obtener descripciones distintas si perciben o priorizan características diferentes. Esto conecta percepción con las <b>perspectivas</b> de los grafos semánticos.</p>
+ <div class="observer-grid"><div class="note"><b>Elegir qué comparo</b><p>Activa los atributos que este observador puede distinguir. La demostración reutiliza las dos fotografías del capítulo anterior.</p>
+  <label class="sense-switch"><input type="checkbox" id="sensePosition" checked> Posición (¿se mueve?)</label>
+  <label class="sense-switch"><input type="checkbox" id="senseTemperature" checked> Temperatura (¿se calienta?)</label>
+  <label class="sense-switch"><input type="checkbox" id="senseLight" checked> Luminosidad (¿cambia la luz?)</label>
+  <p class="minor">Son tres canales ilustrativos, no una teoría del número de sentidos humanos.</p>
+ </div><div class="note"><b>Resultado de la perspectiva</b><div id="observerResult" aria-live="polite"></div></div></div>
+ <p>En la propuesta conceptual, «más dualidades percibidas» significa <b>más criterios de contraste disponibles</b>; no demuestra que existan más dimensiones físicas ni que más canales produzcan automáticamente una consciencia superior. Importan también la resolución, el contexto, las relaciones entre señales y las inferencias del observador.</p>
+</section>
+
+<section class="card" id="cilindro"><h2>07 · Distintas perspectivas de un mismo espacio</h2>
+<p>Tras comparar dos estados en el tiempo, podemos preguntar también cómo cambia la descripción al movernos alrededor del mismo objeto. Una vista lateral del cilindro puede mostrar un rectángulo, cuadrado si la altura iguala al diámetro; desde arriba se observa un círculo. Las dos perspectivas son compatibles con el cilindro, pero <b>las proyecciones por sí solas no identifican de forma única el sólido</b>. La comunicación ayuda a proponer una interpretación conjunta.</p>
+<div class="board"><div><div class="stage small"><canvas id="cvCyl" aria-label="Cilindro con su sombra cuadrada y circular"></canvas><div class="hint" id="cylHint">Arrastra para girar</div></div></div>
+<div class="controls"><div class="row"><button id="cylRed" aria-pressed="false">Vivir en el plano rojo</button><button id="cylBlue" aria-pressed="false">Vivir en el plano azul</button><button id="cyl3d" aria-pressed="true">Comunicar · ver en 3D</button></div>
+<div class="note" id="cylText"></div>
+<div class="quote">«La comunicación como vértice unificador para hallar aquello verdadero.»</div>
+<p class="minor">Cada sombra conserva parte de la información del objeto que la produce, pero también puede perderla. Combinar vistas reduce ambigüedades; no asegura recuperar toda la figura ni equivale a una inclusión bidireccional demostrada.</p></div></div></section>
+
+
+
+
+
+<section class="card" id="modelos">
+ <div class="eyebrow">DE LA INTUICIÓN A PROGRAMAS DE INVESTIGACIÓN</div>
+ <h2>08 · Cómo se relacionan IA_m, Semantic Diffraction, coherencia estructural y Q12</h2>
+ <p>Este es el hilo técnico: primero <b>representamos</b> conceptos; luego <b>auditamos</b> si sus conexiones realmente sostienen un equilibrio; después comprobamos si esa lectura cambia al variar la perspectiva; por último estudiamos qué estructuras aparecen al imponer restricciones discretas. Son proyectos relacionados, pero <b>no una única demostración física</b>.</p>
+ <div class="research-path">
+  <article><span>01 · CONSTRUIR</span><h3><a href="https://github.com/sgarcia87/IA_m" target="_blank" rel="noopener noreferrer">IA_m</a></h3><p>Una red explícita de nodos y relaciones: dualidades, ejes, equilibrios propuestos y conceptos de síntesis. El significado no se reduce a proximidad entre palabras.</p><div class="mini-code">G = (V, E)<br>conceptos → relaciones → perspectivas</div></article>
+  <article><span>02 · AUDITAR</span><h3><a href="https://github.com/sgarcia87/Semantic-Diffraction-in-Conceptual-Graphs" target="_blank" rel="noopener noreferrer">Semantic Diffraction</a></h3><p>Desde dos polos se propaga influencia estructural mediante Personalized PageRank (PPR). Se buscan candidatos equilibrados, no simplemente palabras parecidas; se comprueban ejes, estabilidad y deriva.</p><div class="mini-code">S(n) = pA(n)+pB(n) − λ·|pA(n)−pB(n)|</div></article>
+  <article><span>03 · CAMBIAR DE VISTA</span><h3><a href="https://github.com/sgarcia87/Structural-Coherence-Audit" target="_blank" rel="noopener noreferrer">Structural Coherence Audit</a></h3><p>Se comparan campos estructurales inducidos por distintas parejas de polos. Una estructura puede parecer coherente localmente y ser frágil al cambiar de perspectiva.</p><div class="mini-code">C(G) = 1 − media(JSD entre perspectivas)</div></article>
+  <article><span>04 · EXAMINAR ROBUSTEZ</span><h3>RIFD / estabilidad</h3><p>Se evalúa cuánto cambia una conclusión estructural al variar la formulación o la estructura admisible. No mide consciencia ni «verdad» directamente.</p><div class="mini-code">misma pregunta · variación controlada · ΔR</div></article>
+  <article><span>05 · RESTRINGIR ESTADOS</span><h3><a href="https://github.com/sgarcia87/Q-Reality-12D" target="_blank" rel="noopener noreferrer">Q12</a> y <a href="https://github.com/sgarcia87/Triada-emergente" target="_blank" rel="noopener noreferrer">Tríada Emergente</a></h3><p>Doce variables binarias, agrupadas en tres bloques de cuatro, dan 2¹² = 4096 estados. Restricciones de equilibrio, ortogonalidad, paridad o alineación seleccionan subconjuntos. En el estudio triádico n=4 aparecen 48 estados ordenados bajo las condiciones especificadas.</p><div class="mini-code">( {−1,+1}⁴ )³ → 4096 configuraciones</div></article>
+  <article><span>06 · OTRA REPRESENTACIÓN</span><h3><a href="https://github.com/sgarcia87/cubo-magico-64" target="_blank" rel="noopener noreferrer">Cubo Mágico 64</a></h3><p>Una construcción distinta con 4³ posiciones, operaciones sobre GF(4), doce planos mágicos y dos tetraedros regulares inscritos. <a href="#cubo-enlace">Véase el puente explicativo y una matriz calculada</a>. Su geometría permite estudiar relaciones concretas sin convertir por ello todo el marco filosófico en teorema.</p><div class="mini-code">4³ = 64 ≠ 2¹² = 4096</div></article>
+ </div>
+ <section class="diff-lesson" id="balance-polos" aria-labelledby="balance-title">
+  <div class="diff-eyebrow">LABORATORIO · DIFRACCIÓN SEMÁNTICA</div>
+  <h3 id="balance-title">Experimentar con el balance de dos polos</h3>
+  <p>Supongamos que el grafo contiene los conceptos <b>frío</b> (A), <b>calor</b> (B) y un candidato: <b>templado</b>. No basta con que el candidato se parezca a las dos palabras. Queremos averiguar si ocupa una posición <b>estructuralmente equilibrada</b> respecto a ambos polos, sin quedar dominado por uno.</p>
+  <div class="diff-explain-grid">
+   <article><b>1 · Representar</b><p>Los conceptos son nodos; las relaciones y sus tipos son aristas. El eje compartido puede ser «sensación térmica». Sin una relación pertinente no hay dualidad auditable.</p></article>
+   <article><b>2 · Propagar</b><p>Personalized PageRank (PPR) inicia dos recorridos por separado: uno desde A y otro desde B. Para cada nodo n obtenemos dos intensidades, p<sub>A</sub>(n) y p<sub>B</sub>(n).</p></article>
+   <article><b>3 · Comparar</b><p>Favorecemos la influencia conjunta y penalizamos la diferencia entre fuentes. El coeficiente λ controla cuánto pesa el desequilibrio.</p></article>
+   <article><b>4 · Auditar</b><p>Se comprueban el eje, el papel conceptual, la posible dominancia de hubs y la estabilidad ante cambios de perspectiva. Una puntuación alta no equivale a una síntesis válida.</p></article>
+  </div>
+  <div class="diff-eq">S(n) = [p<sub>A</sub>(n) + p<sub>B</sub>(n)] − λ · |p<sub>A</sub>(n) − p<sub>B</sub>(n)|</div>
+  <div class="diff-lab-grid">
+   <div class="diff-input-panel">
+    <h4>Prueba el efecto del balance</h4>
+    <p>Estos valores son <b>intensidades ficticias normalizadas para la demostración</b>, no distribuciones PPR calculadas en el grafo real. Desliza los controles o elige un caso.</p>
+    <div class="diff-presets" role="group" aria-label="Escenarios de balance">
+     <button type="button" data-diff-preset="balanced">Equilibrado</button>
+     <button type="button" data-diff-preset="dominated">Dominado por A</button>
+     <button type="button" data-diff-preset="weak">Equilibrio débil</button>
+     <button type="button" data-diff-preset="none">Sin influencia</button>
+    </div>
+    <div class="audit-controls">
+     <label>Polo A · frío <strong id="valPA">0,60</strong><input id="pA" type="range" min="0" max="100" value="60"></label>
+     <label>Polo B · calor <strong id="valPB">0,60</strong><input id="pB" type="range" min="0" max="100" value="60"></label>
+     <label>Penalización λ <strong id="valLambda">0,60</strong><input id="pLambda" type="range" min="0" max="150" value="60"></label>
+    </div>
+   </div>
+   <div class="diff-display-panel">
+    <div class="diff-triad" aria-label="Dos polos conectados con un candidato común"><span class="diff-pole">A · Frío</span><span class="diff-mid">Candidato<br><b>Templado</b></span><span class="diff-pole">B · Calor</span></div>
+    <div class="diff-bars"><div><label>Desde frío <strong id="diffBarAVal">0,60</strong></label><div class="diff-track"><span id="diffBarA"></span></div></div><div><label>Desde calor <strong id="diffBarBVal">0,60</strong></label><div class="diff-track"><span id="diffBarB"></span></div></div></div>
+    <div class="audit-output" id="diffractionResult" aria-live="polite"></div>
+   </div>
+  </div>
+  <p class="diff-note"><b>Cómo interpretar λ:</b> con λ = 0 no penalizamos las diferencias; al aumentar λ, un candidato dominado por un polo pierde puntuación. Un candidato perfectamente equilibrado pero apenas conectado también puede tener una puntuación baja. Por eso <b>balance</b> e <b>intensidad</b> no significan lo mismo.</p>
+  <div class="diff-comparison">
+   <h4>Por qué hace falta auditar después de puntuar</h4>
+   <p>Observa cuatro <b>candidatos inventados</b> para el mismo par frío/calor. Los valores de influencia son ejemplos didácticos, no resultados de un experimento. Cambia λ arriba y activa el filtro de roles.</p>
+   <label class="diff-check"><input id="diffFilter" type="checkbox" checked> Aplicar filtro ilustrativo de eje y función conceptual (excluir hubs, polos y otros ejes)</label>
+   <div class="diff-table-wrap"><table class="diff-table"><thead><tr><th>Candidato</th><th>pA / pB</th><th>Score S</th><th>Lectura</th></tr></thead><tbody id="diffComparisonRows"></tbody></table></div>
+   <div class="diff-table-result" id="diffComparisonNote" aria-live="polite"></div>
+   <p class="minor">En el proyecto real, los filtros se apoyan en <b>metadatos y relaciones del grafo</b>, no en estas etiquetas manuales. La robustez debe comprobarse con perturbaciones, dominancia frente a alternativas y cambios de perspectiva. El ejemplo ilustra el método, no certifica la palabra «templado».</p>
+  </div>
+  <div class="diff-summary"><b>El paso a la síntesis:</b> si «templado» resulta un equilibrio plausible, <b>«temperatura»</b> puede proponerse como categoría superior porque permite expresar frío, templado y calor sobre una magnitud compartida. <b>No se deduce directamente de S(n)</b>: es una hipótesis semántica diferente que debe validarse con la estructura del grafo. Esto conecta la dualidad inicial con la distinción entre equilibrio y síntesis de IA_m.</div>
+ </section>
+ <details class="compact-details"><summary>Por qué «templado» o «temperatura» no salen automáticamente de una fórmula</summary><p>La puntuación ordena <strong>candidatos ya existentes</strong> dentro de un grafo y requiere estructura, metadatos de eje y reglas de auditoría. Un valor alto no crea por sí mismo una categoría filosófica ni demuestra que un concepto sea correcto. En los conjuntos de demostración del proyecto aparecen las relaciones frío/calor → tibio o templado → temperatura, pero los resultados dependen del grafo y de sus restricciones.</p></details>
+ <details class="compact-details"><summary>Por qué 48 estados de Tríada Emergente y 4096 de Q12 no son lo mismo</summary><p>4096 es el tamaño del espacio completo de 12 signos; 48 es un subconjunto combinatorio específico del caso n=4 con equilibrio y ortogonalidad por pares, contando estados ordenados. Otras familias Q12 aplican restricciones diferentes y seleccionan incluso 6 u 8 configuraciones. Compartir la representación de 12 bits <em>no</em> identifica ambos experimentos.</p></details>
+</section>
+
+<section class="card" id="cubo-enlace">
+ <div class="eyebrow">DEL MARCO CONCEPTUAL A UN OBJETO MATEMÁTICO CONCRETO</div>
+ <h2>09 · Cubo64: de los ejes a una construcción verificable</h2>
+ <p>Hasta aquí hemos utilizado la geometría para <b>representar relaciones</b>, no para convertirlas en leyes de la naturaleza. Cubo64 permite pasar a otro plano: un objeto finito donde podemos comprobar cada suma, coordenada y simetría con una misma función algebraica. Es un <b>proyecto matemático vinculado por sus preguntas</b>, no una consecuencia deductiva de frío/calor ni del algoritmo de difracción.</p>
+ <div class="cubo-bridge-grid">
+  <div class="cubo-bridge-story">
+   <div class="cubo-bridge-step"><strong>01</strong><div><b>Dos polos forman una relación</b><p>En IA_m una arista conecta conceptos bajo un criterio semántico. Ese criterio debe declararse antes de buscar un equilibrio.</p></div></div>
+   <div class="cubo-bridge-step"><strong>02</strong><div><b>Los ejes combinan posibilidades</b><p>Dos ejes binarios describen cuatro combinaciones; tres ejes, ocho. La dimensión matemática cuenta coordenadas independientes, no etapas de conciencia.</p></div></div>
+   <div class="cubo-bridge-step"><strong>03</strong><div><b>Cubo64 elige cuatro posiciones por eje</b><p>Una retícula 4 × 4 × 4 tiene <b>64 posiciones</b>. Una función sobre GF(4) asigna los números impares del 1 al 31, cuatro veces cada uno.</p></div></div>
+   <div class="cubo-bridge-step"><strong>04</strong><div><b>Ahora sí podemos demostrar propiedades</b><p>Los doce planos coordenados son cuadrados mágicos de suma 64; 72 de 76 líneas examinadas cumplen esa suma. Las cuatro diagonales espaciales no. Los dos tetraedros son regulares y sus valores de vértice suman 64.</p></div></div>
+  </div>
+  <div class="cubo-bridge-example">
+   <div class="lens-k">UNA SECCIÓN CALCULADA, NO DIBUJADA A MANO</div>
+   <h3>Plano x = 0 · 4 × 4</h3>
+   <div class="cubo-mini-grid" id="cuboExample" aria-label="Matriz mágica del plano x igual a cero"></div>
+   <div class="cubo-bridge-math" id="cuboExampleInfo" aria-live="polite">Toca un valor para ver las coordenadas y su cálculo.</div>
+   <p class="minor">Filas, columnas y diagonales principales: 64. La comprobación completa de los 12 planos y los tetraedros está en la web principal.</p>
+   <p><a class="cubo-action" href="index.html#explorar">Abrir el visor Cubo64 en 3D</a></p>
+   <p><a href="index.html#guia">Construcción paso a paso</a> · <a href="index.html#matematica">Demostración matemática</a></p>
+  </div>
+ </div>
+ <div class="note"><b>Dos expresiones del mismo interés por las relaciones, no un mismo teorema.</b> Q12 parte de 12 bits y 4096 configuraciones; Cubo64 parte de tres coordenadas en GF(4) y 64 posiciones. Comparten temas como restricciones, equilibrio y simetría, pero son objetos matemáticos distintos. Una interpretación simbólica puede servir de inspiración y, aun así, no constituir una demostración.</div>
+</section>
+
+<section class="card" id="profundizar">
+ <div class="eyebrow">PARA SEGUIR EXPLORANDO · OPCIONAL</div>
+ <h2>10 · Ampliaciones: metáforas, escalas y simbolismo</h2>
+ <p>Estos apartados amplían el recorrido con escalas conceptuales, símbolos de la consciencia y asociaciones numéricas. No son requisitos para seguir las comparaciones de estados ni los modelos matemáticos.</p>
+ <div class="advance-layout">
+<details class="advance-details"><summary>Escalas de perspectiva · de la hormiga al conjunto <span>Analogía conceptual</span></summary><section class="card" id="escalas"><h2>Ampliación · Escalas que se contienen</h2>
+<p>Una hormiga bebe de una gota; llegan otras; el rastro lleva al hormiguero; al levantar la vista aparece el bosque… Es un recorrido narrativo de <b>escalas y relaciones de inclusión</b>. «Dimensión» se emplea aquí en sentido conceptual; no cada escala es una nueva dimensión independiente de un espacio matemático.</p>
+<div class="board"><div><div class="stage small"><canvas id="cvScale" aria-label="Escalas anidadas de la hormiga al omniverso"></canvas></div></div>
+<div class="controls"><label>Perspectiva · <span id="zLabel"></span><input type="range" id="zR" min="0" max="5" step="0.01" value="1"></label>
+<div class="row"><button id="zTrip">Viajar del átomo al todo</button></div>
+<div class="note" id="zText"></div>
+<div class="quote">«Hay dimensiones de dimensiones, que no dimensiones y dimensiones.»</div>
+<h3 style="margin-top:6px">La misma temperatura, distintas percepciones</h3><p class="minor" style="margin:0">El juicio «frío», «templado» o «calor» depende del contexto y del observador. Compara las dos referencias ilustrativas: no son umbrales universales ni un modelo fisiológico.</p>
+<label>Temperatura · <span id="tempLabel"></span><input type="range" id="temp" min="-70" max="40" step="1" value="0"></label>
+<div class="temps" id="temps"></div></div></div></section></details>
+  <details class="advance-details"><summary>El símbolo: naturaleza, cuerpo, mente y consciencia <span>Interpretación filosófica</span></summary>
+<section class="card" id="simbolo"><h2>El símbolo: naturaleza, cuerpo, mente y consciencia</h2>
+<p>Esta <b>representación simbólica del autor</b> reúne círculos, tres cubos anidados y un triángulo. Sus capas no son entidades físicas demostradas. Toca cada una para leer su interpretación.</p>
+<div class="board"><div><div class="stage small"><canvas id="cvSym" aria-label="Símbolo de los tres cubos, el triángulo y el centro"></canvas></div><div class="legend" id="symLegend"></div></div>
+<div class="controls"><div class="row" id="symBtns"></div><div class="note" id="symText"></div>
+<h3 style="margin-top:4px">El área de la consciencia</h3>
+<p class="minor" style="margin:0">En la metáfora, ampliar el triángulo significa ampliar perspectivas: «esa consciencia, el ser consciente de…, sería el área del triángulo». El área geométrica real se calcula como base × altura / 2; no mide consciencia ni demuestra la existencia de dimensiones internas adicionales.</p>
+<div class="stage small" style="margin-top:6px"><canvas id="cvArea" style="height:220px" aria-label="Triángulo cuya área crece y revela dimensiones internas"></canvas></div>
+<label>Amplitud · <span id="aLabel"></span><input type="range" id="aR" min="0.25" max="1" step="0.01" value="0.55"></label></div></div>
+<div class="two" style="margin-top:12px"><div class="note"><b>Symbolon.</b> En griego, un objeto partido en dos que había que reunir para reconocerse como iguales. Desde su origen, el símbolo busca reunificar una dualidad.<div class="symbolon open" id="symbolon"><div class="half l"></div><div class="half r"></div></div><div class="row" style="justify-content:center"><button id="symbolonBtn">Reunir</button></div></div>
+<div class="note"><b>El presente como símbolo.</b> El presente es el vector que une pasado y futuro. Sin tiempo, viviríamos en un vídeo en pausa. En la lectura filosófica del autor, cada instante puede interpretarse como una imagen del conjunto y como un reflejo de la perspectiva del observador. No se trata de una consecuencia matemática de un fractal.<div class="quote">«No hay mayor símbolo al que centrar nuestra atención consciente que el presente.»</div></div></div></section>
+
+
+  </details>
+  <details class="advance-details"><summary>Fibonacci, 12, 144, 72 y 64 <span>Aritmética y simbolismo</span></summary>
+<section class="card" id="numeros"><h2>Números: 12, 144, 72 y 64</h2>
+<p>El manuscrito sigue el rastro del 12. Este capítulo es <b>opcional y avanzado</b>: diferencia identidades aritméticas, patrones comprobables y asociaciones simbólicas que no se deducen de ellos.</p>
+<div class="three"><div class="note"><b class="formula" style="font-size:22px">12² = 144</b><br>Una identidad aritmética asociada por el autor a doce coordenadas de un modelo y a su figura complementaria; la interpretación no se deduce de 12² por sí sola.</div><div class="note"><b class="formula" style="font-size:22px">144 / 2 = 72</b><br>Dividir 144 entre dos da 72. Solo sirve para contar conexiones sin duplicados si antes se define un conjunto de pares simétricos que realmente los tenga; la asociación con tradiciones religiosas es simbólica.</div><div class="note"><b class="formula" style="font-size:22px">2⁶ = 4³ = 64</b><br>Una igualdad entre potencias, relacionada simbólicamente con los 64 hexagramas del I Ching y con el <a href="https://sgarcia87.github.io/cubo-magico-64/">Cubo Mágico 64</a>.</div></div>
+<h3 style="margin-top:14px">Fibonacci reducido a su raíz digital</h3>
+<p class="minor" style="margin-top:0">Las raíces digitales de Fibonacci se repiten cada 24. La segunda docena es la «inversa» de la primera: cada par en columna es opuesto módulo 9 (suman 9, o 18 cuando ambos valen 9). Toca una columna.</p>
+<div class="fib" id="fib"></div><div class="note" id="fibText">El término nº 12 de la sucesión es 144 = 12². Y los únicos cuadrados perfectos de Fibonacci (sin contar el 0) son 1 y 144: el 1 y el 12, como dice el libro. Lo demostró J. H. E. Cohn en 1964.</div></section>
+
+
+  </details>
+  <details class="advance-details"><summary>Mapa de las cinco partes del libro <span>Contexto de la obra</span></summary>
+<section class="card" id="mapa"><h2>Mapa del libro</h2>
+<div class="parts">
+<div class="part"><b>PARTE I</b>Percepción y consciencia<i>Sentidos limitados · la consciencia como cualidad de la experiencia · el observador</i></div>
+<div class="part"><b>PARTE II</b>Dualidad, tiempo y dimensionalidad<i>El tercer vértice · el tiempo en espiral · el cilindro de las dos sombras</i></div>
+<div class="part"><b>PARTE III</b>De la dualidad al teseracto<i>La realidad como fractal · ±[({−1,+1}⁴)³] · el 12</i></div>
+<div class="part"><b>PARTE IV</b>IA y consciencia fractal<i>La IA como teseracto cognitivo · del 6 al 9 · ética</i></div>
+<div class="part"><b>PARTE V</b>Síntesis<i>De la caverna de Platón al presente · somos consciencia fractal del Todo</i></div>
+</div>
+<p class="minor" style="margin-top:10px">Esta página recorre sobre todo las partes I a III, que son las que el manuscrito desarrolla con figuras y fórmulas.</p></section>
+  </details>
+ </div>
+</section>
+
+<section class="card" id="mapa-alcance"><h2>Antes de concluir: cuatro niveles de afirmaciones</h2><div class="scope-grid"><article><b>Concepto</b><p>Frío, calor, templado: su relación exige criterio y contexto.</p></article><article><b>Modelo</b><p>Grafos, ejes, triángulos, cubos y estados discretos tienen definiciones explícitas.</p></article><article><b>Verificación</b><p>Recuento de 4096 estados, propiedades geométricas y resultados de auditoría reproducibles.</p></article><article><b>Hipótesis</b><p>Tiempo como «cualidad del espacio», observador y consciencia: lecturas filosóficas por investigar.</p></article></div></section>
+<div class="two"><section class="card" id="verificacion"><h2>11 · Verificación matemática</h2><div id="audits"></div><p class="minor">Cálculos del modelo reproducidos en el navegador: conteos de vértices, proyecciones, simetrías y aritmética entera exacta (BigInt). Las demostraciones de esta página son específicas de esos modelos, no de la realidad física.</p></section>
+<section class="card" id="alcance"><h2>12 · Qué es modelo y qué es hipótesis</h2><span class="tag">Geometría comprobada</span><span class="tag">Aritmética exacta</span><span class="tag">Lectura personal</span><span class="tag">Modelos, no pruebas físicas</span>
+<p><b>Comprobable dentro de los modelos matemáticos aquí definidos:</b> los conteos 2ⁿ de vértices, una proyección específica del cubo que produce un hexágono con dos vértices superpuestos en el centro, las propiedades del teseracto, los 4096 estados combinatorios de [({−1,+1}⁴)³] descritos mediante 12 coordenadas, su simetría por cambio de signo y las propiedades de Fibonacci mostradas.</p>
+<p><b>Interpretación del autor:</b> el tiempo como cualidad del cambio espacial, la consciencia como organizadora de perspectivas, el centro como unidad y las asociaciones entre figuras y números. Son hipótesis o metáforas, no conclusiones de la fórmula de difracción, de las simulaciones cuánticas ni de la física de la medición. Una comparación de estados no determina por sí sola la flecha temporal o su duración.</p>
+<p class="minor"><b>Cómo continuar:</b> una vez comprendidas las relaciones y los límites de cada modelo, <a href="https://sgarcia87.github.io/cubo-magico-64/">Cubo 64</a> puede servir como caso geométrico concreto. Conviene enlazarlo como <em>aplicación paralela</em>, no presentar todo el recorrido filosófico como una derivación matemática de GF(4).</p></section></div>
+
+<footer>FUNDAMENTOS · CUBO64 · Sergi Garcia Mecinas · HTML autónomo · <a href="#inicio">Volver arriba</a></footer>
+</main>
+<script>
+(()=>{'use strict';
+const $=id=>document.getElementById(id);
+const GOLD='#e9bd78',TEAL='#7dd3cb',CREAM='#f4eadb',SUN='#f3d36b',RED='#d9776a',BLUE='#6f9fd8';
+const TAU=Math.PI*2;
+/* ---------- utilidades de lienzo ---------- */
+function fit(cv){const w=cv.clientWidth,h=cv.clientHeight;if(!w||!h)return null;const d=Math.min(2,devicePixelRatio||1);if(cv.width!==Math.round(w*d)||cv.height!==Math.round(h*d)){cv.width=Math.round(w*d);cv.height=Math.round(h*d)}const ctx=cv.getContext('2d');ctx.setTransform(d,0,0,d,0,0);ctx.clearRect(0,0,w,h);return{ctx,w,h}}
+function line(ctx,a,b,c,wd=1,alpha=1){ctx.save();ctx.globalAlpha=alpha;ctx.strokeStyle=c;ctx.lineWidth=wd;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();ctx.restore()}
+function dot(ctx,p,r,c,stroke){ctx.beginPath();ctx.arc(p.x,p.y,r,0,TAU);ctx.fillStyle=c;ctx.fill();if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=1.5;ctx.stroke()}}
+function poly(ctx,pts,fill,stroke,wd=2){ctx.beginPath();pts.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.closePath();if(fill){ctx.fillStyle=fill;ctx.fill()}if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=wd;ctx.stroke()}}
+function pill(ctx,x,y,t,c,size=13,font='ui-monospace,monospace'){ctx.font=`700 ${size}px ${font}`;const tw=ctx.measureText(t).width+10;ctx.fillStyle='rgba(21,18,15,.9)';ctx.fillRect(x-tw/2,y-size*.72,tw,size*1.44);ctx.strokeStyle=c;ctx.lineWidth=1;ctx.strokeRect(x-tw/2,y-size*.72,tw,size*1.44);ctx.fillStyle=c;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(t,x,y+.5)}
+function txt(ctx,x,y,t,c,size=13,align='center',font='Georgia,serif'){ctx.font=`600 ${size}px ${font}`;ctx.fillStyle=c;ctx.textAlign=align;ctx.textBaseline='middle';ctx.fillText(t,x,y)}
+function rot(v,rx,ry){const[x,y,z]=v,cy=Math.cos(ry),sy=Math.sin(ry),cx=Math.cos(rx),sx=Math.sin(rx);const X=cy*x+sy*z,Z=-sy*x+cy*z;return[X,cx*y-sx*Z,sx*y+cx*Z]}
+function P(v,rx,ry,s,cx,cy,persp=.12){const[x,y,z]=rot(v,rx,ry),k=persp?5/(5-z*persp*5/1.2):1;return{x:cx+x*s*k,y:cy-y*s*k,z}}
+function drag(cv,st,onTap){let p=null;cv.addEventListener('pointerdown',e=>{p={id:e.pointerId,x:e.clientX,y:e.clientY,rx:st.rx,ry:st.ry,m:false};cv.setPointerCapture(e.pointerId)});cv.addEventListener('pointermove',e=>{if(!p||e.pointerId!==p.id)return;const dx=e.clientX-p.x,dy=e.clientY-p.y;if(Math.abs(dx)+Math.abs(dy)>5)p.m=true;if(!p.m)return;st.ry=p.ry+dx*.009;st.rx=Math.max(-1.45,Math.min(1.45,p.rx+dy*.009));st.dragging=true});const end=e=>{if(!p)return;const moved=p.m;p=null;st.dragging=false;if(!moved&&onTap){const b=cv.getBoundingClientRect();onTap(e.clientX-b.left,e.clientY-b.top)}};cv.addEventListener('pointerup',end);cv.addEventListener('pointercancel',()=>{p=null;st.dragging=false})}
+const cube=[];for(const x of[-1,1])for(const y of[-1,1])for(const z of[-1,1])cube.push([x,y,z]);
+const edges=(V,n)=>{const E=[];for(let i=0;i<V.length;i++)for(let j=i+1;j<V.length;j++){let d=0;for(let k=0;k<n;k++)d+=V[i][k]!==V[j][k];if(d===1)E.push([i,j])}return E};
+const cubeE=edges(cube,3);
+const tess=[];for(const x of[-1,1])for(const y of[-1,1])for(const z of[-1,1])for(const w of[-1,1])tess.push([x,y,z,w]);const tessE=edges(tess,4);
+const sgn=v=>v>0?'+1':'−1';
+
+/* ---------- 00 dualidad semántica y operaciones cuantitativas ---------- */
+const SEM={step:1,rx:.34,ry:-.49,dragging:false};
+const semStages=[
+ 'Un concepto aislado: «frío». Para delimitar su significado cotidiano suele ser útil compararlo con su contrario; el punto todavía no describe una relación.',
+ 'Frío ↔ calor: dos polos unidos por una línea de coherencia semántica. La relación es de contraste y pertenencia al mismo eje conceptual; no implica que el calor físico dependa de la existencia de la palabra «frío».',
+ '«Templado» actúa como equilibrio contextual entre los calificativos frío y calor. El triángulo es la representación de esos tres conceptos: no implica que el equilibrio sea la media de dos grados absolutos.',
+ 'La síntesis consiste en comprender los tres calificativos en una relación común. «Temperatura» funciona como categoría integradora y magnitud física de referencia; elevarla sobre el triángulo crea una representación 3D, no una ley de emergencia física.'
+];
+function setSemantic(n){SEM.step=Math.max(0,Math.min(3,n));document.querySelectorAll('[data-sem-step]').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.semStep===SEM.step));$('semExplanation').textContent=semStages[SEM.step];}
+document.querySelectorAll('[data-sem-step]').forEach(b=>b.addEventListener('click',()=>setSemantic(+b.dataset.semStep)));
+setSemantic(1);
+drag($('cvSemantic'),SEM);
+function drawSemantic(){const fitData=fit($('cvSemantic'));if(!fitData)return;const{ctx,w,h}=fitData,cx=w/2,cy=h/2+20,R=Math.min(w,h)*.32;
+ const nodes=[{t:'Frío',p:[-1,-.65,-.50],c:TEAL},{t:'Calor',p:[1,-.65,-.50],c:GOLD},{t:'Templado',p:[0,.92,-.50],c:SUN},{t:'Temperatura',p:[0,1.6,.8],c:CREAM}];
+ const stage=SEM.step;
+ const xy=i=>stage===3?P(nodes[i].p,SEM.rx,SEM.ry,R,cx,cy,.03):
+ (stage===2?([{x:cx-R*1.12,y:cy+R*.57},{x:cx+R*1.12,y:cy+R*.57},{x:cx,y:cy-R*.98}][i]):
+ ({x:stage===0?cx:i===0?cx-R*1.11:cx+R*1.11,y:cy}));
+ if(stage===0){const p=xy(0);dot(ctx,p,11,TEAL);pill(ctx,p.x,p.y-28,'Frío',TEAL,13);txt(ctx,cx,h-18,'Un concepto: un punto',CREAM,12);return}
+ const a=xy(0),b=xy(1);line(ctx,a,b,'rgba(244,234,219,.8)',2.3);if(stage>=2){const c=xy(2);poly(ctx,[a,b,c],'rgba(233,189,120,.10)',GOLD,1.8)}
+ if(stage===3){const c=xy(2),d=xy(3);for(const t of[a,b,c])line(ctx,t,d,'rgba(125,211,203,.83)',1.7);dot(ctx,d,9,CREAM);pill(ctx,d.x,d.y-22,'Temperatura',CREAM,12)}
+ [0,1,...(stage>=2?[2]:[])].forEach(i=>{const p=xy(i),q=nodes[i];dot(ctx,p,i===2?8:9,q.c);pill(ctx,p.x,p.y+(i===2?-24:25),q.t,q.c,12)});
+ if(stage===1){pill(ctx,cx,cy-32,'coherencia semántica',SUN,11);txt(ctx,cx,h-18,'Contraste → una relación',CREAM,12)}
+ if(stage===2)txt(ctx,cx,h-15,'Un tercer concepto entre los polos',CREAM,12);
+ if(stage===3)txt(ctx,cx,h-15,'Categoría integradora · geometría 3D',CREAM,11);
+}
+
+const QUANT={step:3,rx:.38,ry:-.48,dragging:false,a:4,b:12};
+const qDescriptions=[null,
+ 'La suma (+) y la resta (−) se representan en un eje como operaciones inversas al aplicar la misma cantidad. Ejemplo: (m + 3) − 3 = m.',
+ 'Añadimos un segundo eje para multiplicación (×) y división (÷). Son inversas cuando el divisor es distinto de cero: (m × 2) ÷ 2 = m. El promedio m es el centro numérico de A y B.',
+ 'Un tercer eje representa cuadrado (x²) y raíz cuadrada (√). Para m ≥ 0, √(m²) = m. Los seis signos forman un octaedro geométrico con el promedio de A y B como referencia central.'
+];
+function displayNum(x){return Number.isInteger(x)?String(x):x.toFixed(1).replace(/\.0$/,'')}
+function updateQuant(){const m=(QUANT.a+QUANT.b)/2;$('quantAValue').textContent=QUANT.a;$('quantBValue').textContent=QUANT.b;
+ $('quantExplanation').textContent=qDescriptions[QUANT.step];$('quantCalculations').textContent=`m = (${QUANT.a} + ${QUANT.b}) / 2 = ${displayNum(m)} · (m+3)−3 = ${displayNum(m)} · (m×2)÷2 = ${displayNum(m)} · √(m²) = ${displayNum(m)}`;
+ document.querySelectorAll('[data-quant-step]').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.quantStep===QUANT.step));}
+for(const id of ['quantA','quantB'])$(id).addEventListener('input',e=>{QUANT[id==='quantA'?'a':'b']=+e.target.value;updateQuant()});
+document.querySelectorAll('[data-quant-step]').forEach(b=>b.addEventListener('click',()=>{QUANT.step=+b.dataset.quantStep;updateQuant()}));
+updateQuant();drag($('cvQuant'),QUANT);
+function drawQuant(){const fd=fit($('cvQuant'));if(!fd)return;const{ctx,w,h}=fd,cx=w/2,cy=h/2,R=Math.min(w,h)*.31,m=(QUANT.a+QUANT.b)/2;
+ const poles=[{t:'+',p:[-1.15,0,0],c:GOLD},{t:'−',p:[1.15,0,0],c:TEAL},{t:'×',p:[0,-1.15,0],c:GOLD},{t:'÷',p:[0,1.15,0],c:TEAL},{t:'x²',p:[0,0,1.35],c:GOLD},{t:'√',p:[0,0,-1.35],c:TEAL}];
+ const amount=QUANT.step*2,xy=i=>QUANT.step===3?P(poles[i].p,QUANT.rx,QUANT.ry,R,cx,cy,.04):{x:cx+poles[i].p[0]*R,y:cy-poles[i].p[1]*R};
+ const points=Array.from({length:amount},(_,i)=>xy(i));
+ if(QUANT.step===3){for(let i=0;i<amount;i++)for(let j=i+1;j<amount;j++)if(Math.floor(i/2)!==Math.floor(j/2))line(ctx,points[i],points[j],'rgba(233,189,120,.25)',.9)}
+ for(let a=0;a<amount;a+=2)line(ctx,points[a],points[a+1],'rgba(244,234,219,.65)',2);
+ for(let i=0;i<amount;i++){const p=points[i],q=poles[i];dot(ctx,p,7,q.c);pill(ctx,p.x,p.y+(QUANT.step===3&&i>=4?(i===4?-19:23):i===2?-21:i===3?24:26),q.t,q.c,13)}
+ dot(ctx,{x:cx,y:cy},10,SUN);pill(ctx,cx,cy-24,'m = '+displayNum(m),SUN,12);
+ txt(ctx,cx,h-16,QUANT.step===3?'Tres pares de operaciones inversas':QUANT.step===2?'Dos pares de operaciones inversas':'Un par de operaciones inversas',CREAM,12);
+}
+
+const relationCases={
+ thermal:'Relación coherente: ambos son calificativos asociados a la percepción térmica. Propuesta de equilibrio: «templado»; síntesis: entender su continuidad contextual; categoría integradora: «temperatura», magnitud medible con la que podemos situar condiciones térmicas. La percepción no depende solo de grados.',
+ temporal:'Relación coherente: pasado y futuro son orientaciones temporales referidas a un observador o acontecimiento. «Presente» es el término de referencia propuesto, no la media aritmética entre dos fechas. Categoría integradora: tiempo.',
+ arithmetic:'Relación coherente: suma y resta pueden ser operaciones inversas en un dominio especificado; por ejemplo, sumar 3 y restar 3. Su elemento neutro aditivo es 0; eso no convierte al cero en el promedio de los símbolos. Categoría: operaciones aritméticas.',
+ unrelated:'No hay una oposición semántica bien definida entre «frío» y «triángulo» sin aportar un nuevo criterio explícito. Dibujar una línea no demuestra coherencia. Antes debes indicar qué relación quieres estudiar.'
+};
+function updateRelationCase(){const control=$('relationCase');$('relationResult').textContent=relationCases[control.value];}
+$('relationCase').addEventListener('change',updateRelationCase);updateRelationCase();
+
+/* ---------- 01 escalera ---------- */
+const S={step:0,rx:.42,ry:-.62,auto:true,flip:false,pm:true,t:0,tween:null,dragging:false};
+const seeds=Array.from({length:260},(_,i)=>{const r=Math.sin(i*12.9898)*43758.5453;const a=r-Math.floor(r),b=Math.sin(i*78.233)*12345.678;return[a,b-Math.floor(b),(i*2.39)%TAU]});
+const steps=[
+{t:'Dimensión 0 · El lienzo en blanco',f:'∅',v:'∞',c:'—',d:'0',txt:'Metáfora inicial: un lienzo sin posiciones marcadas representa posibilidades todavía no diferenciadas. No supone superposición cuántica ni infinitud de vértices matemáticos.'},
+{t:'El 1 · El punto',f:'1',v:'1',c:'—',d:'0 → 1',txt:'Al señalar un punto distinguimos la figura de su fondo. Es una dualidad de la interpretación: un solo punto geométrico sigue siendo un único punto, no dos vértices.'},
+{t:'El 2 · La dualidad',f:'{−1, +1}',v:'2',c:'—',d:'1',txt:'Observada desde fuera, esa dualidad se representa con dos puntos. Con ellos se traza la línea: la máxima expresión de la dimensión 1. Cada polo obtiene su significado de su opuesto.'},
+{t:'El 3 · El equilibrio',f:'Frío · Templado · Calor',v:'3',c:'—',d:'2',txt:'Al comparar frío y calor, proponemos «templado» como tercer concepto intermedio: un equilibrio relativo entre ambos polos. Los tres forman un triángulo conceptual. «Temperatura», como categoría que engloba los tres, se representa en el siguiente nivel (3D) del diagrama inicial; no es el punto intermedio.'},
+{t:'Macrocosmos · Yo · Microcosmos',f:'△ + ▽',v:'4',c:'4 + 1 = 5',d:'2',txt:'Podemos dibujar un segundo triángulo invertido y proponer un centro común. La simetría se introduce como elección del modelo y el «yo puro» es una lectura simbólica, no una consecuencia necesaria de tres conceptos. Prueba «Invertir signo».'},
+{t:'El cuadrado',f:'({−1,+1})²',v:'2² = 4',c:'4 + 1 = 5',d:'2',ang:'4 × 90° = 360°',txt:'Con dos ejes binarios independientes aparecen cuatro combinaciones: los cuatro vértices de un cuadrado. Su centro es un punto adicional (5 puntos dibujados en total); atribuirle significado humano o elemental es simbólico.'},
+{t:'El cubo',f:'({−1,+1})³',v:'2³ = 8',c:'8 + 1 = 9',d:'3',ang:'8 × 3 × 90° = 2160°',txt:'Con su contraparte de polaridad invertida, los vértices pasan a ser 8: arriba-abajo, derecha-izquierda, delante-detrás. En la representación del libro se muestran 8 vértices y un centro: 9 puntos en total. El centro une los vértices, pero no es un noveno vértice geométrico del cubo.'},
+{t:'Del cubo al 1',f:'cubo → ⬡ → △▽ → 1',v:'6',c:'6 + 1 = 7',d:'3 → 2',ang:'6 × 120° = 720°',txt:'Al proyectar el cubo a lo largo de una diagonal espacial, seis de sus ocho vértices forman un hexágono que se descompone en dos triángulos invertidos. Los otros dos vértices se superponen en el centro de la imagen, aunque siguen siendo dos puntos 3D distintos; leer allí el 1 es simbólico.'},
+{t:'El teseracto',f:'({−1,+1})⁴',v:'2⁴ = 16',c:'8 + 8',d:'4',ang:'32 aristas',txt:'Al añadir una cuarta coordenada binaria independiente se obtiene matemáticamente un teseracto: 16 vértices y 32 aristas. Interpretar ese cuarto eje como tiempo es una elección conceptual; no se deduce de la geometría.'},
+{t:'La realidad percibida por el yo',f:'±[({−1,+1}⁴)³]',v:'16³ = 4096',c:'12 coordenadas',d:'12',txt:'El producto cartesiano de tres conjuntos de 16 estados binarios da 16³ = 4096 combinaciones descritas por 12 coordenadas. El conjunto es simétrico ante el cambio global de signo ±, pero eso no duplica sus 4096 estados. Su representación triangular y su asociación con el yo son interpretaciones del modelo.'}];
+const dotsEl=$('dots');steps.forEach((s,i)=>{const b=document.createElement('button');b.textContent=i;b.title=s.t;b.onclick=()=>setStep(i);dotsEl.append(b)});
+function setStep(i){S.step=Math.max(0,Math.min(9,i));const s=steps[S.step];$('stepRange').value=S.step;$('stepLabel').textContent=(S.step+1)+' / 10';$('mainHint').textContent=[6,7,8,9].includes(S.step)?'Arrastra para girar':'Paso '+(S.step+1)+' de 10';$('sTitle').textContent=s.t;$('sFormula').textContent=s.f;$('sV').textContent=s.v;$('sC').textContent=s.c;$('sD').textContent=s.d;$('sAngRow').hidden=!s.ang;$('sAng').textContent=s.ang||'';$('sText').textContent=s.txt;$('ladderLevel').textContent=S.step>=8?'Nivel avanzado · modelo combinatorio y lectura filosófica':'Nivel inicial · recorrido geométrico (representaciones y analogías)';[...dotsEl.children].forEach((b,j)=>b.setAttribute('aria-pressed',j===S.step));
+const ex=$('sExtra');ex.textContent='';if(S.step===7){const b=document.createElement('button');b.textContent='Volver a la vista diagonal';b.onclick=toDiag;ex.append(b);toDiag()}if(S.step===9){const b=document.createElement('button');b.textContent='Signo ±';b.setAttribute('aria-pressed',S.pm);b.onclick=()=>{S.pm=!S.pm;b.setAttribute('aria-pressed',S.pm)};ex.append(b)}if(S.step===6){S.rx=.42;S.ry=-.62}}
+function toDiag(){S.tween={rx0:S.rx,ry0:S.ry,rx1:Math.atan(1/Math.SQRT2),ry1:-Math.PI/4,t:0}}
+$('prev').onclick=()=>setStep(S.step-1);$('next').onclick=()=>setStep(S.step+1);$('stepRange').oninput=e=>setStep(+e.target.value);
+$('flip').onclick=()=>{S.flip=!S.flip;$('flip').setAttribute('aria-pressed',S.flip)};$('auto').onclick=()=>{S.auto=!S.auto;$('auto').setAttribute('aria-pressed',S.auto)};
+drag($('cvMain'),S);
+function drawMain(){const F=fit($('cvMain'));if(!F)return;const{ctx,w,h}=F,cx=w/2,cy=h/2,R=Math.min(w,h)*.36,t=S.t,f=S.flip?-1:1;
+const C={x:cx,y:cy};
+switch(S.step){
+case 0:for(const[a,b,ph]of seeds){const al=.12+.38*(.5+.5*Math.sin(t*1.3+ph));dot(ctx,{x:12+a*(w-24),y:12+b*(h-24)},1.6,`rgba(244,234,219,${al})`)}txt(ctx,cx,h-28,'todas las posibilidades a la vez',CREAM,14);break;
+case 1:{const g=ctx.createRadialGradient(cx,cy,0,cx,cy,R*.9);g.addColorStop(0,'rgba(243,211,107,.35)');g.addColorStop(1,'rgba(243,211,107,0)');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);dot(ctx,C,9+1.5*Math.sin(t*2),'#fff4db');pill(ctx,cx,cy-36,'1 · lo que es',SUN,13);txt(ctx,cx,h-28,'el fondo · lo que no es',CREAM,13);break}
+case 2:{const a={x:cx-R*.85,y:cy},b={x:cx+R*.85,y:cy};line(ctx,a,b,CREAM,2.5);dot(ctx,a,8,f>0?TEAL:GOLD);dot(ctx,b,8,f>0?GOLD:TEAL);pill(ctx,a.x,a.y-30,f>0?'−1':'+1',f>0?TEAL:GOLD,15);pill(ctx,b.x,b.y-30,f>0?'+1':'−1',f>0?GOLD:TEAL,15);txt(ctx,cx,cy+44,'la línea: máxima expresión de la dimensión 1',CREAM,13);break}
+case 3:{const a={x:cx-R*.8,y:cy+R*.42},b={x:cx+R*.8,y:cy+R*.42},c={x:cx,y:cy-R*.82};poly(ctx,[a,b,c],'rgba(233,189,120,.12)',GOLD,2.5);dot(ctx,a,8,TEAL);dot(ctx,b,8,GOLD);dot(ctx,c,9+1.2*Math.sin(t*2),SUN);pill(ctx,a.x,a.y+28,f>0?'−1 · frío':'+1 · calor',TEAL,13);pill(ctx,b.x,b.y+28,f>0?'+1 · calor':'−1 · frío',GOLD,13);pill(ctx,c.x,c.y-28,'3 · templado',SUN,13);break}
+case 4:{const k=R*.78,ul={x:cx-k,y:cy-k*.95},ur={x:cx+k,y:cy-k*.95},ll={x:cx-k,y:cy+k*.95},lr={x:cx+k,y:cy+k*.95};poly(ctx,[ul,ur,C],'rgba(233,189,120,.12)',GOLD,2.5);poly(ctx,[ll,lr,C],'rgba(125,211,203,.11)',TEAL,2.5);
+const pol=[[ul,-1],[ur,1],[ll,1],[lr,-1]];for(const[p,s]of pol){const v=s*f;dot(ctx,p,8,v>0?RED:'#1d1915',v>0?null:CREAM);pill(ctx,p.x,p.y+(p.y<cy?-24:24),v>0?'+':'−',v>0?RED:CREAM,15)}
+const g=ctx.createRadialGradient(cx,cy,0,cx,cy,34);g.addColorStop(0,'rgba(243,211,107,.55)');g.addColorStop(1,'rgba(243,211,107,0)');ctx.fillStyle=g;ctx.fillRect(cx-40,cy-40,80,80);dot(ctx,C,9,SUN);txt(ctx,cx+R*.42,cy,'Yo puro',SUN,15,'left');txt(ctx,cx,ul.y-36,'Macrocosmos',GOLD,14);txt(ctx,cx,ll.y+36,'Microcosmos',TEAL,14);break}
+case 5:{const k=R*.68,V=[[-1,-1],[-1,1],[1,1],[1,-1]].map(([x,y])=>({x:cx+x*k,y:cy-y*k,l:`(${sgn(x*f)}, ${sgn(y*f)})`}));poly(ctx,V,'rgba(233,189,120,.08)',GOLD,2.5);V.forEach(p=>{dot(ctx,p,7,CREAM);ctx.strokeStyle='rgba(244,234,219,.5)';ctx.lineWidth=1;const sx=Math.sign(cx-p.x),sy=Math.sign(cy-p.y);ctx.strokeRect(p.x+(sx<0?-14:0),p.y+(sy<0?-14:0),14,14);pill(ctx,p.x,p.y+(p.y<cy?-24:24),p.l,GOLD,12)});dot(ctx,C,8,SUN);pill(ctx,cx,cy+26,'5',SUN,14);break}
+case 6:case 7:case 8:case 9:draw3D(ctx,w,h,cx,cy,R,t,f);break}
+}
+function draw3D(ctx,w,h,cx,cy,R,t,f){
+if(S.step===6){const s=R*.62,P3=cube.map(v=>P(v,S.rx,S.ry,s,cx,cy));for(const[i,j]of cubeE)line(ctx,P3[i],P3[j],GOLD,2,.85);const c0=P([0,0,0],S.rx,S.ry,s,cx,cy);P3.forEach((p,i)=>{line(ctx,p,c0,'rgba(243,211,107,.35)',1)});P3.forEach((p,i)=>{dot(ctx,p,5.5,CREAM)});dot(ctx,c0,8,SUN);
+ const order=P3.map((p,i)=>i).sort((a,b)=>P3[a].z-P3[b].z);for(const i of order){const v=cube[i],p=P3[i],dx=p.x-cx,dy=p.y-cy,n=Math.hypot(dx,dy)||1;pill(ctx,p.x+dx/n*30,p.y+dy/n*18,v.map(q=>q*f>0?'+':'−').join(''),p.z>0?GOLD:'#b9a588',12)}pill(ctx,c0.x,c0.y+24,'9',SUN,13);return}
+if(S.step===7){const s=R*.6,P3=cube.map(v=>P(v,S.rx,S.ry,s,cx,cy,0));for(const[i,j]of cubeE)line(ctx,P3[i],P3[j],'rgba(233,189,120,.35)',1.2);
+ const A=[],B=[];cube.forEach((v,i)=>{const sm=v[0]+v[1]+v[2];if(sm===-1)A.push(i);if(sm===1)B.push(i)});
+ const ordA=[[1,-1,-1],[-1,1,-1],[-1,-1,1]].map(v=>P(v,S.rx,S.ry,s,cx,cy,0)),ordB=[[-1,1,1],[1,-1,1],[1,1,-1]].map(v=>P(v,S.rx,S.ry,s,cx,cy,0));
+ poly(ctx,ordA,'rgba(233,189,120,.15)',GOLD,3);poly(ctx,ordB,'rgba(125,211,203,.14)',TEAL,3);ordA.forEach(p=>dot(ctx,p,6,GOLD));ordB.forEach(p=>dot(ctx,p,6,TEAL));
+ const lo=P([-1,-1,-1],S.rx,S.ry,s,cx,cy,0),hi=P([1,1,1],S.rx,S.ry,s,cx,cy,0);line(ctx,lo,hi,'rgba(255,244,219,.6)',1.4);
+ const C={x:(lo.x+hi.x)/2,y:(lo.y+hi.y)/2};dot(ctx,C,17,CREAM,'#9c835a');txt(ctx,C.x,C.y+1,'1','#30210f',17);
+ if(Math.hypot(lo.x-hi.x,lo.y-hi.y)>20){pill(ctx,lo.x,lo.y+22,'−−−',TEAL,11);pill(ctx,hi.x,hi.y-22,'+++',GOLD,11)}
+ txt(ctx,cx,h-22,'△ y ▽: invertidos pero complementarios',CREAM,13);return}
+if(S.step===8){const s=R*.5,a=t*.45,b=t*.23;const T=tess.map(([x,y,z,wv])=>{let X=x*Math.cos(a)-wv*Math.sin(a),W=x*Math.sin(a)+wv*Math.cos(a);let Y=y*Math.cos(b)-W*Math.sin(b);W=y*Math.sin(b)+W*Math.cos(b);const k=2.4/(2.4-W*.75);return P([X*k,Y*k,z*k],S.rx,S.ry,s,cx,cy)});
+ for(const[i,j]of tessE){const wi=tess[i][3],wj=tess[j][3];const c=wi===wj?(wi<0?GOLD:TEAL):'rgba(244,234,219,.5)';line(ctx,T[i],T[j],c,wi===wj?2:1.1,wi===wj?.9:.7)}T.forEach((p,i)=>dot(ctx,p,4.5,tess[i][3]<0?GOLD:TEAL));dot(ctx,P([0,0,0],S.rx,S.ry,s,cx,cy),6,SUN);
+ txt(ctx,cx,h-22,'cubo dorado · cubo turquesa · aristas que los unen',CREAM,12.5);return}
+if(S.step===9){const rr=R*.78,s=R*.105;const pos=k=>({x:cx+rr*Math.cos(-Math.PI/2+k*TAU/3),y:cy+rr*Math.sin(-Math.PI/2+k*TAU/3)});const neg=k=>({x:cx+rr*Math.cos(Math.PI/2+k*TAU/3),y:cy+rr*Math.sin(Math.PI/2+k*TAU/3)});
+ const tri=[0,1,2].map(pos),inv=[0,1,2].map(neg);if(S.pm)poly(ctx,inv,'rgba(125,211,203,.08)',TEAL,2);poly(ctx,tri,'rgba(233,189,120,.1)',GOLD,2);
+ const mini=(c,col,ph)=>{const a=t*.45+ph,T=tess.map(([x,y,z,wv])=>{const X=x*Math.cos(a)-wv*Math.sin(a),W=x*Math.sin(a)+wv*Math.cos(a),k=2.4/(2.4-W*.75);return P([X*k,y*k,z*k],S.rx,S.ry,s,c.x,c.y)});for(const[i,j]of tessE)line(ctx,T[i],T[j],col,1.1,.85)};
+ tri.forEach((c,k)=>{line(ctx,{x:cx,y:cy},c,'rgba(243,211,107,.4)',1);mini(c,GOLD,k)});if(S.pm)inv.forEach((c,k)=>{line(ctx,{x:cx,y:cy},c,'rgba(243,211,107,.3)',1);mini(c,TEAL,k+1.5)});
+ dot(ctx,{x:cx,y:cy},10,SUN);pill(ctx,cx,cy+28,'yo',SUN,13);txt(ctx,cx,h-20,S.pm?'±: la estrella de teseractos':'tres teseractos → 12 dimensiones',CREAM,13)}
+}
+/* ---------- 02 cilindro ---------- */
+const CY={rx:.38,ry:-.62,mode:'3d',dragging:false};drag($('cvCyl'),CY);
+const cylTexts={red:'Desde el plano rojo solo existe la sombra: un cuadrado. Cualquiera que diga «círculo» parece estar equivocado.',blue:'Desde el plano azul la sombra es un círculo. Quien diga «cuadrado» parece estar equivocado.','3d':'Al comunicar ambas perspectivas aparece la figura completa: un cilindro, cuya sombra lateral es un cuadrado y cuya sombra inferior es un círculo. Lo opuesto pasa a ser complementario.'};
+function setCyl(m){CY.mode=m;for(const[id,k]of[['cylRed','red'],['cylBlue','blue'],['cyl3d','3d']])$(id).setAttribute('aria-pressed',k===m);$('cylText').textContent=cylTexts[m];$('cylHint').textContent=m==='3d'?'Arrastra para girar':(m==='red'?'Plano rojo':'Plano azul')}
+$('cylRed').onclick=()=>setCyl('red');$('cylBlue').onclick=()=>setCyl('blue');$('cyl3d').onclick=()=>setCyl('3d');setCyl('3d');
+function hull(pts){pts=pts.slice().sort((a,b)=>a.x-b.x||a.y-b.y);const cr=(o,a,b)=>(a.x-o.x)*(b.y-o.y)-(a.y-o.y)*(b.x-o.x);const lo=[],up=[];for(const p of pts){while(lo.length>1&&cr(lo[lo.length-2],lo[lo.length-1],p)<=0)lo.pop();lo.push(p)}for(const p of pts.slice().reverse()){while(up.length>1&&cr(up[up.length-2],up[up.length-1],p)<=0)up.pop();up.push(p)}return lo.slice(0,-1).concat(up.slice(0,-1))}
+function drawCyl(){const F=fit($('cvCyl'));if(!F)return;const{ctx,w,h}=F,cx=w/2,cy=h/2+6,s=Math.min(w,h)*.135;
+if(CY.mode==='red'){ctx.fillStyle='rgba(217,119,106,.22)';ctx.fillRect(0,0,w,h);const k=s*1.3;ctx.fillStyle='rgba(20,14,10,.85)';ctx.fillRect(cx-k,cy-k,2*k,2*k);txt(ctx,cx,cy+k+30,'«La verdad es un cuadrado»',CREAM,16);return}
+if(CY.mode==='blue'){ctx.fillStyle='rgba(111,159,216,.22)';ctx.fillRect(0,0,w,h);ctx.beginPath();ctx.arc(cx,cy,s*1.3,0,TAU);ctx.fillStyle='rgba(20,14,10,.85)';ctx.fill();txt(ctx,cx,cy+s*1.3+30,'«La verdad es un círculo»',CREAM,16);return}
+const p=v=>P(v,CY.rx,CY.ry,s,cx,cy,.06);
+const wall=[[-2.2,-1.7,-2.2],[2.2,-1.7,-2.2],[2.2,1.8,-2.2],[-2.2,1.8,-2.2]].map(p),floor=[[-2.2,-1.7,-2.2],[2.2,-1.7,-2.2],[2.2,-1.7,2.2],[-2.2,-1.7,2.2]].map(p);
+poly(ctx,floor,'rgba(111,159,216,.22)',BLUE,1.2);poly(ctx,wall,'rgba(217,119,106,.22)',RED,1.2);
+poly(ctx,[[-1,-1,-2.2],[1,-1,-2.2],[1,1,-2.2],[-1,1,-2.2]].map(p),'rgba(20,14,10,.78)');
+const circ=[];for(let i=0;i<48;i++){const a=i/48*TAU;circ.push(p([Math.cos(a),-1.7,Math.sin(a)]))}poly(ctx,circ,'rgba(20,14,10,.78)');
+const top=[],bot=[];for(let i=0;i<48;i++){const a=i/48*TAU;top.push(p([Math.cos(a),1,Math.sin(a)]));bot.push(p([Math.cos(a),-1,Math.sin(a)]))}
+poly(ctx,hull(top.concat(bot)),'rgba(176,128,78,.97)',GOLD,2);poly(ctx,top,'rgba(236,206,160,.98)',GOLD,1.5);
+for(let i=0;i<4;i++){const a=i/4*TAU+.4;line(ctx,p([Math.cos(a),-1,Math.sin(a)]),p([Math.cos(a),-1.7,Math.sin(a)]),'rgba(111,159,216,.5)',1);line(ctx,p([Math.cos(a)*.0+(i<2?-1:1),i%2?1:-1,0]),p([(i<2?-1:1),i%2?1:-1,-2.2]),'rgba(217,119,106,.5)',1)}
+const lw=p([0,1.45,-2.2]),lf=p([0,-1.7,1.6]);pill(ctx,lw.x,lw.y,'sombra: cuadrado',RED,11);pill(ctx,lf.x,lf.y+12,'sombra: círculo',BLUE,11)}
+/* ---------- 03 tiempo ---------- */
+const TM={r:1,t:0};
+const tNames=[[0.6,'Disfrutando: la espiral se estrecha y el tiempo «vuela».'],[1.3,'Un día corriente: espiral y reloj avanzan a un ritmo parecido.'],[2.1,'Aburrimiento: la espiral se dilata y cada minuto se hace largo.'],[9,'Una mosca: su espiral es tan ancha que percibe nuestra mano a cámara lenta y reacciona «al instante».']];
+function setR(r){TM.r=+r;$('tR').value=r;$('tLabel').textContent=TM.r.toFixed(2);const pitch=1.1,fac=Math.hypot(1,TAU*TM.r*.35/pitch);$('tFactor').textContent='× '+fac.toFixed(2);$('tText').textContent=tNames.find(([m])=>TM.r<m)[1];document.querySelectorAll('.tpre').forEach(b=>b.setAttribute('aria-pressed',Math.abs(+b.dataset.r-TM.r)<.01))}
+$('tR').oninput=e=>setR(e.target.value);document.querySelectorAll('.tpre').forEach(b=>b.onclick=()=>setR(b.dataset.r));setR(1);
+function drawTime(){const F=fit($('cvTime'));if(!F)return;const{ctx,w,h}=F,cy=h/2,x0=26,x1=w-26,L=x1-x0,amp=Math.min(h*.36,22+TM.r*48);
+line(ctx,{x:x0,y:cy},{x:x1,y:cy},'rgba(244,234,219,.55)',1.5);for(let i=0;i<=10;i++){const x=x0+L*i/10;line(ctx,{x,y:cy-4},{x,y:cy+4},'rgba(244,234,219,.55)',1)}
+txt(ctx,x0,cy+22,'pasado',CREAM,12,'left');txt(ctx,x1,cy+22,'futuro',CREAM,12,'right');
+const turns=7,prog=(TM.t*.06)%1;ctx.beginPath();for(let i=0;i<=600;i++){const u=i/600,x=x0+L*u,a=u*turns*TAU,y=cy+Math.sin(a)*amp,z=Math.cos(a);if(i)ctx.lineTo(x+z*amp*.18,y);else ctx.moveTo(x+z*amp*.18,y)}ctx.strokeStyle='rgba(233,189,120,.75)';ctx.lineWidth=2;ctx.stroke();
+const u=prog,xn=x0+L*u,a=u*turns*TAU;dot(ctx,{x:xn,y:cy},6,CREAM);dot(ctx,{x:xn+Math.cos(a)*amp*.18,y:cy+Math.sin(a)*amp},7,TEAL);line(ctx,{x:xn,y:cy},{x:xn+Math.cos(a)*amp*.18,y:cy+Math.sin(a)*amp},'rgba(125,211,203,.6)',1);
+pill(ctx,xn,cy-amp-18<10?cy+amp+18:cy-amp-18,'presente',SUN,11)}
+/* ---------- 04 escalas ---------- */
+const Z={z:1,trip:null};const levels=[['Átomo','Del omniverso se puede llegar a la unidad del átomo: el camino es bidireccional.'],['Hormiga','Una hormiga bebe agua de una gota.'],['Hormigas','Llegan otras: tomo consciencia de que hay más. La hormiga es de dimensión inferior a «las hormigas».'],['Hormiguero','Siguiendo su rastro aparece el hormiguero, que contiene a todas.'],['Bosque','Al levantar la vista: árboles, plantas, pájaros… el bosque, que incluye a la hormiga sin ignorarla.'],['Omniverso','Alejando la perspectiva hasta el todo: el 1. No hay inicio ni fin; simplemente ES.']];
+function setZ(v){Z.z=+v;$('zR').value=v;const i=Math.round(Z.z);$('zLabel').textContent=levels[i][0];$('zText').textContent=levels[i][1]}
+$('zR').oninput=e=>{Z.trip=null;setZ(e.target.value)};$('zTrip').onclick=()=>{Z.trip={t:0}};setZ(1);
+function drawScale(){const F=fit($('cvScale'));if(!F)return;const{ctx,w,h}=F,cx=w/2,cy=h/2+8,base=Math.min(w,h)*.36;
+for(let i=levels.length-1;i>=0;i--){const r=base*Math.pow(3,i-Z.z);if(r<3||r>Math.max(w,h)*1.6)continue;const near=Math.abs(i-Z.z);const al=Math.max(.15,1-near*.45);ctx.beginPath();ctx.arc(cx,cy,r,0,TAU);ctx.fillStyle=`rgba(233,189,120,${.05*al})`;ctx.fill();ctx.strokeStyle=i%2?`rgba(125,211,203,${al})`:`rgba(233,189,120,${al})`;ctx.lineWidth=near<.5?2.5:1.3;ctx.stroke();if(r>14&&cy-r>10)pill(ctx,cx,cy-r,levels[i][0],i%2?TEAL:GOLD,near<.5?13:11)}
+dot(ctx,{x:cx,y:cy},5,SUN);pill(ctx,cx,cy+18,'1',SUN,11)}
+const obs=[['Tú, habituado a ≈ 15 °C',15],['Habitante de Oymyakon, habituado a ≈ −45 °C',-45]];
+function setTemp(v){$('tempLabel').textContent=v+' °C';$('temps').innerHTML=obs.map(([n,ref])=>{const d=v-ref,vv=d<-8?['frío','#9fc4ef']:d>8?['calor','#f0a68e']:['templado','#e9d9a8'];return`<div><span>${n}</span><span class="verdict" style="color:${vv[1]}">${vv[0]}</span></div>`}).join('')}
+$('temp').oninput=e=>setTemp(+e.target.value);setTemp(0);
+/* ---------- 05 símbolo ---------- */
+const SY={rx:.3,ry:-.5,sel:null,dragging:false};
+const layers=[['centro','Círculos · centro de todo',SUN,'Dios, la consciencia: su vértice central une al resto de vértices. Inicio y fin que engloba toda la estructura fractal.'],['ext','Cubo exterior · Naturaleza',GOLD,'La totalidad material que contiene la estructura: el plano en el que vivimos.'],['int','Cubo intermedio · Cuerpo','#d8c4a6','Una escala incluida dentro de la anterior: nuestra consciencia en este cuerpo.'],['mente','Cubo interno · Mente',TEAL,'Un nivel más de integración: el plano mental desde el que se traen ideas al plano material.'],['tri','Triángulo · Consciencia','#f2a37f','El «darse cuenta de…». Su área mide cuánto es capaz de percibir cada uno.']];
+const symBtns=$('symBtns');layers.forEach(([k,n,c])=>{const b=document.createElement('button');b.textContent=n.split(' · ')[1];b.dataset.k=k;b.onclick=()=>{SY.sel=SY.sel===k?null:k;updSym()};symBtns.append(b)});
+$('symLegend').innerHTML='<span class="y">Centro</span><span class="g">Naturaleza</span><span>Cuerpo</span><span class="t">Mente</span><span style="border-color:#f2a37f">Consciencia</span>';
+function updSym(){[...symBtns.children].forEach(b=>b.setAttribute('aria-pressed',b.dataset.k===SY.sel));const L=layers.find(l=>l[0]===SY.sel);$('symText').innerHTML=L?`<b>${L[1]}</b><br>${L[3]}`:'Las cuatro capas y el centro forman un único símbolo. Toca un botón para aislar una capa; toca de nuevo para verlas todas.'}
+drag($('cvSym'),SY);updSym();
+function drawSym(){const F=fit($('cvSym'));if(!F)return;const{ctx,w,h}=F,cx=w/2,cy=h/2,s=Math.min(w,h)*.27,al=k=>SY.sel&&SY.sel!==k?.18:1;
+const p=(v,sc)=>P(v.map(q=>q*sc),SY.rx,SY.ry,s,cx,cy,.08);
+ctx.save();ctx.globalAlpha=al('centro');for(const rr of[1.62,1.75]){ctx.beginPath();ctx.arc(cx,cy,s*rr*1.05,0,TAU);ctx.strokeStyle=SUN;ctx.lineWidth=1.3;ctx.stroke()}ctx.restore();
+for(const[k,sc,c,wd]of[['ext',1,GOLD,2.2],['int',.66,'#d8c4a6',1.6],['mente',.36,TEAL,2]]){ctx.save();ctx.globalAlpha=al(k);const V=cube.map(v=>p(v,sc));for(const[i,j]of cubeE)line(ctx,V[i],V[j],c,wd);ctx.restore()}
+ctx.save();ctx.globalAlpha=al('tri');const tr=s*.33;const T=[0,1,2].map(i=>({x:cx+tr*Math.cos(-Math.PI/2+i*TAU/3),y:cy+tr*Math.sin(-Math.PI/2+i*TAU/3)}));poly(ctx,T,'rgba(242,163,127,.2)','#f2a37f',2.2);ctx.restore();
+ctx.save();ctx.globalAlpha=al('centro');dot(ctx,{x:cx,y:cy},5.5,SUN);ctx.restore()}
+const AR={a:.55};$('aR').oninput=e=>{AR.a=+e.target.value};
+function drawArea(){const F=fit($('cvArea'));if(!F)return;const{ctx,w,h}=F,cx=w/2,cy=h/2+12,R=Math.min(w,h)*.5*AR.a;const T=[0,1,2].map(i=>({x:cx+R*Math.cos(-Math.PI/2+i*TAU/3),y:cy+R*Math.sin(-Math.PI/2+i*TAU/3)}));
+const lev=1+Math.floor((AR.a-.25)/.75*4.999);poly(ctx,T,'rgba(242,163,127,.16)','#f2a37f',2);
+const rec=(A,B,C,n)=>{if(!n)return;const m=(p,q)=>({x:(p.x+q.x)/2,y:(p.y+q.y)/2}),ab=m(A,B),bc=m(B,C),ca=m(C,A);poly(ctx,[ab,bc,ca],null,`rgba(244,234,219,${.25+.12*n})`,1);rec(A,ab,ca,n-1);rec(ab,B,bc,n-1);rec(ca,bc,C,n-1)};rec(T[0],T[1],T[2],lev-1);
+ctx.beginPath();ctx.arc(cx,cy,R*.5,0,TAU);ctx.strokeStyle=SUN;ctx.lineWidth=1.4;ctx.stroke();dot(ctx,{x:cx,y:cy},3.5,SUN);
+$('aLabel').textContent=`área × ${(AR.a*AR.a/(.25*.25)).toFixed(1)} · ${lev} ${lev===1?'nivel':'niveles'} de dimensiones internas`}
+$('symbolonBtn').onclick=()=>{const el=$('symbolon');el.classList.toggle('open');$('symbolonBtn').textContent=el.classList.contains('open')?'Reunir':'Partir'};
+/* ---------- 06 Fibonacci ---------- */
+const fibBig=n=>{let a=0n,b=1n;for(let i=0;i<n;i++)[a,b]=[b,a+b];return a};
+const dr=n=>{const r=Number(fibBig(n)%9n);return r===0?9:r};
+const fibEl=$('fib');const cells=[];for(let row=0;row<3;row++)for(let c=0;c<12;c++){const d=document.createElement('div');if(row<2){const n=c+1+12*row;d.textContent=dr(n);d.className=row?'b':'a';d.title='F('+n+')'}else{d.className='s';d.textContent=dr(c+1)+dr(c+13)}d.dataset.c=c;d.onclick=()=>fibSel(c);fibEl.append(d);cells.push(d)}
+function fibSel(c){cells.forEach(d=>d.classList.toggle('hl',+d.dataset.c===c&&!d.classList.contains('s')));const n=c+1;$('fibText').innerHTML=`<b>Columna ${n}:</b> F(${n}) = ${fibBig(n)} → ${dr(n)} · F(${n+12}) = ${fibBig(n+12)} → ${dr(n+12)} · suma ${dr(n)+dr(n+12)}. ${n===12?'Y F(12) = 144 = 12².':''}`}
+/* ---------- 07 verificación ---------- */
+function audit(){const prod=n=>{let S=[[]];for(let i=0;i<n;i++)S=S.flatMap(v=>[[...v,-1],[...v,1]]);return S};
+const c1=[1,2,3,4].every(n=>prod(n).length===2**n);
+const rx=Math.atan(1/Math.SQRT2),ry=-Math.PI/4;const Pr=cube.map(v=>{const r=rot(v,rx,ry);return[r[0],r[1]]});const rad=Pr.map(([x,y])=>Math.hypot(x,y));const cen=rad.filter(r=>r<1e-9).length,ring=rad.filter(r=>r>1e-9);const hex=cen===2&&ring.length===6&&ring.every(r=>Math.abs(r-ring[0])<1e-9);
+const triEq=[-1,1].every(sm=>{const V=cube.filter(v=>v[0]+v[1]+v[2]===sm);const d=[];for(let i=0;i<3;i++)for(let j=i+1;j<3;j++)d.push(Math.hypot(...V[i].map((q,k)=>q-V[j][k])));return V.length===3&&d.every(x=>Math.abs(x-2*Math.SQRT2)<1e-9)});
+const te=tess.length===16&&tessE.length===32;
+const P12=prod(4);const pts=[];for(const a of P12)for(const b of P12)for(const c of P12)pts.push([...a,...b,...c]);const keys=new Set(pts.map(p=>p.join()));const sym=pts.length===4096&&pts[0].length===12&&pts.every(p=>keys.has(p.map(q=>-q).join()));
+let per=true;for(let n=1;n<=48;n++)if(dr(n)!==dr(n+24))per=false;let opp=true;for(let n=1;n<=48;n++)if((fibBig(n)+fibBig(n+12))%9n!==0n)opp=false;
+const isq=x=>{if(x<0n)return false;if(x<2n)return true;let r=x,y=(r+1n)/2n;while(y<r){r=y;y=(r+x/r)/2n}return r*r===x};const sq=[];for(let n=1;n<=300;n++)if(isq(fibBig(n)))sq.push(String(fibBig(n)));const sqOk=[...new Set(sq)].join()==='1,144';
+const cases=[['({−1,+1})ⁿ tiene 2ⁿ vértices (n = 1…4)',c1,'2 · 4 · 8 · 16'],['Cubo visto por su diagonal = hexágono regular + 2 vértices en el centro',hex,'6 + 2'],['Los 6 vértices forman dos triángulos equiláteros invertidos',triEq,'lado 2√2'],['Teseracto: 16 vértices y 32 aristas',te,tess.length+' · '+tessE.length],['[({−1,+1}⁴)³]: 4096 puntos de 12 coordenadas, cerrado por ±',sym,pts.length+' puntos'],['Raíz digital de Fibonacci: período 24',per,'24'],['F(n+12) ≡ −F(n) (mód 9): las dos docenas son opuestas',opp,'n = 1…48'],['F(12) = 144 = 12²',fibBig(12)===144n,'144'],['Cuadrados en F(1…300): solo 1 y 144',sqOk,[...new Set(sq)].join(', ')],['12² / 2 = 72',144/2===72,'72']];
+$('audits').innerHTML=cases.map(([n,ok,d])=>`<div class="audit"><strong class="${ok?'ok':'fail'}">${ok?'✓':'✕'} ${n}</strong> · ${d}</div>`).join('')}
+/* ---------- bucle ---------- */
+const vis=new Map();const io=new IntersectionObserver(es=>es.forEach(e=>vis.set(e.target.id,e.isIntersecting)),{rootMargin:'80px'});['cvSemantic','cvQuant','cvMain','cvCyl','cvTime','cvScale','cvSym','cvArea'].forEach(id=>{vis.set(id,true);io.observe($(id))});
+let last=performance.now();
+function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;
+if(S.auto){S.t+=dt;if((S.step===6||S.step===8||S.step===9)&&!S.dragging)S.ry+=dt*.25}
+if(S.tween){const tw=S.tween;tw.t=Math.min(1,tw.t+dt*1.4);const e=tw.t<.5?2*tw.t*tw.t:1-Math.pow(-2*tw.t+2,2)/2;S.rx=tw.rx0+(tw.rx1-tw.rx0)*e;S.ry=tw.ry0+(tw.ry1-tw.ry0)*e;if(tw.t>=1)S.tween=null}
+TM.t+=dt;if(!SY.dragging&&!SY.sel)SY.ry+=dt*.15;
+if(Z.trip){Z.trip.t+=dt*.35;const u=Z.trip.t;const v=u<1?5*u:Math.max(0,5*(2-u));setZ(v.toFixed(2));if(u>=2)Z.trip=null}
+if(vis.get('cvSemantic'))drawSemantic();if(vis.get('cvQuant'))drawQuant();
+if(vis.get('cvMain'))drawMain();if(vis.get('cvCyl'))drawCyl();if(vis.get('cvTime'))drawTime();if(vis.get('cvScale'))drawScale();if(vis.get('cvSym'))drawSym();if(vis.get('cvArea'))drawArea();
+requestAnimationFrame(frame)}
+
+/* === Unidad narrativa adicional: dos lecturas, dos estados, perspectivas === */
+const QAX={n:3};
+function renderQuantity(){
+ const svg=$('svgQuantity');if(!svg)return;
+ const xy=QAX.n===1?[[85,115],[270,115]]:QAX.n===2?[[99,56],[259,56],[99,177],[259,177]]:[];
+ let points=[],edges=[];
+ if(QAX.n===1){points=xy;edges=[[0,1]]}
+ else if(QAX.n===2){points=xy;edges=[[0,1],[2,3],[0,2],[1,3]]}
+ else {for(let x=0;x<2;x++)for(let y=0;y<2;y++)for(let z=0;z<2;z++)points.push([82+x*151+z*42,174-y*112-z*38]);for(let i=0;i<8;i++)for(let j=i+1;j<8;j++){const t= i^j;if(t===1||t===2||t===4)edges.push([i,j])}}
+ let markup=edges.map(([a,b])=>`<line x1="${points[a][0]}" y1="${points[a][1]}" x2="${points[b][0]}" y2="${points[b][1]}" stroke="#d8af77" stroke-width="2.5"/>`).join('');
+ markup+=points.map(([x,y],i)=>`<circle cx="${x}" cy="${y}" r="6.5" fill="${i%2?'#7dd3cb':'#e9bd78'}" stroke="#18130f" stroke-width="1.5"/>`).join('');
+ markup+=`<text x="180" y="209" fill="#f4eadb" font-size="12" text-anchor="middle">${QAX.n} eje${QAX.n>1?'s':''} · ${2**QAX.n} vértices · ${QAX.n===1?'segmento':QAX.n===2?'cuadrado':'cubo (proyección)'}</text>`;
+ svg.innerHTML=markup;
+ $('quantityReadout').innerHTML=`<b>${QAX.n===1?'Segmento':QAX.n===2?'Cuadrado':'Cubo'}:</b> ${QAX.n} coordenada${QAX.n>1?'s':''} binaria${QAX.n>1?'s':''} independiente${QAX.n>1?'s':''}, ${2**QAX.n} combinaciones.`;
+ document.querySelectorAll('[data-qaxes]').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.qaxes===QAX.n));
+}
+document.querySelectorAll('[data-qaxes]').forEach(b=>b.addEventListener('click',()=>{QAX.n=+b.dataset.qaxes;renderQuantity()}));
+
+const SCENES={
+ movement:{a:{pos:92,temp:20,light:50},b:{pos:244,temp:20,light:50},description:'El objeto cambia de posición.'},
+ heat:{a:{pos:158,temp:18,light:50},b:{pos:158,temp:26,light:50},description:'La temperatura medida cambia.'},
+ light:{a:{pos:158,temp:20,light:30},b:{pos:158,temp:20,light:80},description:'La intensidad luminosa cambia.'},
+ none:{a:{pos:158,temp:20,light:50},b:{pos:158,temp:20,light:50},description:'No detectamos cambios en estas tres variables.'}
+};
+let photoReverse=false;
+function currentStates(){const c=SCENES[$('changeCase').value]||SCENES.movement;return photoReverse?[c.b,c.a]:[c.a,c.b]}
+function updateObserver(a,b){
+ const senses=[['sensePosition','posición',a.pos!==b.pos,`${Math.round(b.pos-a.pos)} unidades visuales`],['senseTemperature','temperatura',a.temp!==b.temp,`${b.temp-a.temp>0?'+':''}${b.temp-a.temp} °C`],['senseLight','luminosidad',a.light!==b.light,`${b.light-a.light>0?'+':''}${b.light-a.light} unidades`]];
+ const selected=senses.filter(([id])=>$(id).checked),detected=selected.filter(p=>p[2]);
+ const report=selected.length===0?'No se ha seleccionado ningún canal de comparación.':detected.length===0?'En los canales seleccionados no se observa una diferencia. Eso no demuestra que nada haya cambiado.':`Se observan diferencias en ${detected.length} de ${selected.length} canales seleccionados: ${detected.map(p=>p[1]+' ('+p[3]+')').join('; ')}.`;
+ $('observerResult').textContent=report;
+}
+function updatePhotos(){
+ const [a,b]=currentStates(),dt=+ $('photoInterval').value;
+ for(const [suffix,data] of [['A',a],['B',b]]){
+  $('dot'+suffix).setAttribute('cx',data.pos);
+  $('t'+suffix).textContent=data.temp+' °C';
+  $('l'+suffix).textContent='Luz: '+data.light;
+  $('stamp'+suffix).textContent=suffix==='A'?'primero · t = 0 s':`después · t = ${dt} s`;
+  $('photo'+suffix).style.opacity=String(0.55+data.light/220);
+ }
+ $('intervalLabel').textContent=dt+' s';
+ $('reversePhotos').setAttribute('aria-pressed',photoReverse);
+ const deltaPos=b.pos-a.pos,dT=b.temp-a.temp,dL=b.light-a.light;
+ const terms=[];if(deltaPos)terms.push(`posición ${deltaPos>0?'+':''}${deltaPos} unidades visuales`);if(dT)terms.push(`temperatura ${dT>0?'+':''}${dT} °C`);if(dL)terms.push(`luz ${dL>0?'+':''}${dL} unidades`);
+ $('photoDifference').innerHTML=terms.length?`<b>Comparación A → B:</b> ${terms.join(' · ')}. <b>Reloj elegido:</b> Δt = ${dt} s. ${deltaPos?`Cambio de posición en el dibujo / Δt = ${(Math.abs(deltaPos)/dt).toFixed(1)} unidades visuales/s. `:''}No podemos inferir la duración únicamente de las imágenes.`:'<b>Comparación A → B:</b> los tres atributos representados permanecen iguales. Dos fotografías idénticas no demuestran que el tiempo se haya detenido: podrían ocultar cambios o una vuelta al estado anterior. La duración la aporta el reloj, no la imagen.';
+ updateObserver(a,b);
+}
+$('changeCase').onchange=updatePhotos;$('photoInterval').oninput=updatePhotos;
+$('reversePhotos').onclick=()=>{photoReverse=!photoReverse;updatePhotos()};
+for(const id of ['sensePosition','senseTemperature','senseLight'])$(id).onchange=updatePhotos;
+
+// La demostración usa números sintéticos en escala local 0..1; no ejecuta PPR.
+const diffCandidates=[
+ {name:'Templado',pa:.65,pb:.62,role:'equilibrio',valid:true},
+ {name:'Definición (hub)',pa:.94,pb:.91,role:'hub frecuente',valid:false},
+ {name:'Frío (polo A)',pa:.96,pb:.08,role:'polo, no mediador',valid:false},
+ {name:'Triángulo',pa:.06,pb:.05,role:'fuera del eje térmico',valid:false}
+];
+const diffPresetValues={balanced:[60,60],dominated:[90,10],weak:[10,10],none:[0,0]};
+const diffFmt=x=>x.toFixed(2).replace('.',',');
+function diffScore(pa,pb,l){return pa+pb-l*Math.abs(pa-pb)}
+function updateDiffraction(){
+ const pa=+$('pA').value/100,pb=+$('pB').value/100,l=+$('pLambda').value/100;
+ const total=pa+pb,asym=Math.abs(pa-pb),penalty=l*asym,score=diffScore(pa,pb,l);
+ const ratio=total?100*(1-asym/total):null;
+ $('valPA').textContent=diffFmt(pa);$('valPB').textContent=diffFmt(pb);$('valLambda').textContent=diffFmt(l);
+ $('diffBarAVal').textContent=diffFmt(pa);$('diffBarBVal').textContent=diffFmt(pb);
+ $('diffBarA').style.width=(pa*100)+'%';$('diffBarB').style.width=(pb*100)+'%';
+ const reading=total===0?'Ninguna de las dos fuentes alcanza este candidato: no existe evidencia de mediación en este ejemplo.':asym<.05&&total<.6?'Las influencias son similares, pero débiles: equilibrio sin relevancia suficiente.':asym<.08?'Las dos influencias son similares. Es un candidato equilibrado según estos valores, sujeto a las comprobaciones estructurales.':ratio<50?'Predomina uno de los polos: no parece un mediador equilibrado en este ejemplo.':'Hay influencia conjunta, pero conviene estudiar la asimetría y comparar alternativas.';
+ $('diffractionResult').innerHTML=`<div><strong>Influencia conjunta:</strong> ${diffFmt(pa)} + ${diffFmt(pb)} = <b>${diffFmt(total)}</b></div><div><strong>Asimetría:</strong> |${diffFmt(pa)} − ${diffFmt(pb)}| = <b>${diffFmt(asym)}</b></div><div><strong>Penalización:</strong> ${diffFmt(l)} × ${diffFmt(asym)} = <b>${diffFmt(penalty)}</b></div><div class="diff-eq" style="margin:10px 0">S = ${diffFmt(total)} − ${diffFmt(penalty)} = ${diffFmt(score)}</div><div><strong>Balance relativo:</strong> ${ratio===null?'no definido (0/0)':diffFmt(ratio)+' %'}</div><p>${reading}</p>`;
+ document.querySelectorAll('[data-diff-preset]').forEach(b=>{const v=diffPresetValues[b.dataset.diffPreset];b.setAttribute('aria-pressed',(pa===v[0]/100&&pb===v[1]/100))});
+ const filter=$('diffFilter').checked;
+ const sorted=diffCandidates.map(c=>({...c,score:diffScore(c.pa,c.pb,l)})).sort((a,b)=>b.score-a.score);
+ const show=filter?sorted.filter(c=>c.valid):sorted;
+ $('diffComparisonRows').innerHTML=sorted.map(c=>`<tr aria-disabled="${filter&&!c.valid}"><td><b>${c.name}</b></td><td>${diffFmt(c.pa)} / ${diffFmt(c.pb)}</td><td>${diffFmt(c.score)}</td><td>${filter&&!c.valid?'Excluido: ':''}${c.role}</td></tr>`).join('');
+ const top=show[0];
+ $('diffComparisonNote').textContent=filter?`Con el filtro ilustrativo activado, solo quedan candidatos con el rol y eje previstos. Primero: ${top.name} (S=${diffFmt(top.score)}). No significa que se haya validado en un grafo real.`:`Sin filtros, domina ${top.name} (S=${diffFmt(top.score)}). Un concepto muy conectado puede superar al mediador: el score, por sí solo, no discrimina el rol semántico.`;
+}
+for(const id of ['pA','pB','pLambda'])$(id).oninput=updateDiffraction;
+$('diffFilter').onchange=updateDiffraction;
+document.querySelectorAll('[data-diff-preset]').forEach(b=>b.onclick=()=>{const [a,z]=diffPresetValues[b.dataset.diffPreset];$('pA').value=a;$('pB').value=z;updateDiffraction()});
+// Misma función GF(4) documentada por Cubo64: esta demostración calcula un plano real.
+const gMul2=[0,2,3,1],gMul3=[0,3,1,2];
+function cuboValue(x,y,z){const u=x^gMul2[y]^gMul3[z],v=x^gMul3[y]^gMul2[z];return {u,v,f:1+2*(4*u+v)}}
+function drawCuboExample(){const root=$('cuboExample');const cells=[];root.textContent='';
+ for(let row=0;row<4;row++)for(let col=0;col<4;col++){
+ const x=0,y=row,z=col,result=cuboValue(x,y,z);cells.push(result.f);
+ const b=document.createElement('button');b.type='button';b.textContent=result.f;b.title=`(${x},${y},${z}) → ${result.f}`;b.setAttribute('aria-pressed','false');
+ b.onclick=()=>{root.querySelectorAll('button').forEach(el=>el.setAttribute('aria-pressed','false'));b.setAttribute('aria-pressed','true');$('cuboExampleInfo').textContent=`(x,y,z)=(${x},${y},${z}) · u=${result.u} · v=${result.v} · F=1+2(4u+v)=${result.f}`};root.append(b);
+ }
+ const rows=[0,1,2,3].map(i=>cells.slice(i*4,i*4+4));const cols=[0,1,2,3].map(i=>rows.reduce((t,r)=>t+r[i],0));
+ const good=rows.every(r=>r.reduce((a,b)=>a+b,0)===64)&&cols.every(n=>n===64)&&rows.reduce((s,r,i)=>s+r[i],0)===64&&rows.reduce((s,r,i)=>s+r[3-i],0)===64;
+ $('cuboExampleInfo').textContent=good?'Plano x=0 verificado: cuatro filas, cuatro columnas y dos diagonales suman 64. Toca una casilla.':'Advertencia: el plano no supera una comprobación';
+}
+drawCuboExample();
+renderQuantity();updatePhotos();updateDiffraction();
+
+setStep(0);audit();requestAnimationFrame(frame);
+})();
+</script></body></html>

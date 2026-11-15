@@ -2,7 +2,7 @@
 
 **Matemática, geometría y lectura simbólica** · Sergi Garcia Mecinas
 
-Página web estática e interactiva para presentar el proyecto *Cubo 64*: una retícula de orden **4 × 4 × 4**, una numeración definida mediante el campo finito **GF(4)**, 12 planos cuadrados mágicos de constante **64**, la estrella octángula formada por dos tetraedros regulares y una interpretación simbólica inspirada en el manuscrito personal *La Realidad*.
+Página web estática e interactiva para presentar el proyecto *Cubo 64*: una retícula de orden **4 × 4 × 4**, una numeración definida mediante el campo finito **GF(4)**, 12 planos cuadrados mágicos de constante **64**, la estrella octángula formada por dos tetraedros regulares y una lectura simbólica de dualidad, complementariedad, equilibrio y relación entre las partes y el conjunto.
 
 ## Ver la web
 
@@ -14,6 +14,7 @@ Abre `index.html` en el navegador. No necesita servidor, dependencias, conexión
 - Modos de cubo completo, octantes, hexagrama, tetraedros, núcleo y lectura simbólica.
 - Seis matrices exteriores y seis secciones interiores generadas por una misma función.
 - Auditoría reproducible con resultados visibles en la propia web y script Python independiente.
+- Guía de ocho pasos con botones que activan la vista correspondiente en el visor 3D.
 - Explicación de qué propiedades están demostradas y cuáles son interpretaciones simbólicas.
 
 ## Fórmula
@@ -32,6 +33,10 @@ F(x,y,z) = 1 + 2*(4*u + v)
 Para `(x,y,z) ∈ {0,1,2,3}³`, la función produce 16 valores impares del 1 al 31, cada uno cuatro veces. Cada uno de los 12 planos coordenados contiene los 16 impares una vez y es un cuadrado mágico 4 × 4 de suma 64.
 
 **Precisiones:** 72 de las 76 líneas principales consideradas son mágicas. Las cuatro diagonales espaciales suman 4, 52, 76 y 124. No es un cubo mágico perfecto. Los tetraedros regulares tienen vértices que suman 64, pero esa suma no es una nueva línea mágica.
+
+## Guía paso a paso
+
+La web permite seguir la construcción en ocho etapas, con botones para cambiar la vista del modelo: retícula 4 × 4 × 4; numeración GF(4); doce planos mágicos; 72 líneas de suma 64; hexagrama; dos tetraedros regulares; núcleo interior; e interpretación simbólica opcional.
 
 ## Comprobar las matemáticas
 
@@ -52,7 +57,7 @@ No se necesitan paquetes externos.
 ## Créditos y alcance
 
 - **Idea e investigación:** Sergi Garcia Mecinas.
-- **Inspiración simbólica:** *La Realidad*, capítulos sobre dualidad, cubo, hexagrama, centro y consciencia.
+- **Interpretación simbólica:** dualidad, equilibrio, síntesis, cubo y hexagrama, diferenciados explícitamente de los resultados matemáticos.
 - **Contexto matemático relacionado:** [Tríada Emergente](https://github.com/sgarcia87/Triada-emergente), [IA_m](https://github.com/sgarcia87/IA_m) y [Q-Reality-12D](https://github.com/sgarcia87/Q-Reality-12D).
 
 El proyecto presenta una construcción matemática reproducible y una lectura filosófica personal. No pretende demostrar una teoría física de la consciencia, del universo ni de la geometría sagrada. El modelo tridimensional es una visualización interactiva de la construcción algebraica, sus simetrías y sus relaciones geométricas.

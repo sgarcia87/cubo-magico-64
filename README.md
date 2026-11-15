@@ -10,6 +10,15 @@ Página web estática e interactiva para presentar el proyecto *Cubo 64*: una re
 
 Abre `index.html` para la versión en español o `en.html` para leer toda la web en inglés, incluidos los controles del visor, la guía y las auditorías. Puedes cambiar de idioma con el selector **ES / EN**. No necesita servidor, dependencias, conexión a Internet ni compilación. Se puede publicar directamente con GitHub Pages.
 
+## Fundamentos conceptuales (ES / EN)
+
+Se ha integrado un recorrido interactivo a partir de *La Realidad Interactiva*, que conecta dualidad, coherencia semántica, equilibrio, síntesis, espacio, tiempo y percepción con IA_m, Semantic Diffraction, Structural Coherence Audit, Q12 y el Cubo64. Mantiene separadas la interpretación filosófica y las propiedades comprobables.
+
+- [Fundamentos interactivos en español](fundamentos.html) — recorrido completo, con un laboratorio ampliado de balance de dos polos y una matriz GF(4) calculada.
+- [Conceptual foundations in English](foundations.html) — introducción autónoma en inglés con el mismo laboratorio y un ejemplo de matriz mágica.
+
+El laboratorio de difracción usa **intensidades ilustrativas**, no ejecuta PageRank sobre un grafo real: demuestra por qué un nodo popular puede puntuar alto y por qué hay que comprobar roles, ejes y estabilidad. Cubo64 conserva su propia auditoría matemáticamente independiente.
+
 ## Qué contiene
 
 - Modelo tridimensional que gira con ratón o dedo.

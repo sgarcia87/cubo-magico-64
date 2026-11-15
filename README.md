@@ -55,6 +55,6 @@ No se necesitan paquetes externos.
 - **Inspiración simbólica:** *La Realidad*, capítulos sobre dualidad, cubo, hexagrama, centro y consciencia.
 - **Contexto matemático relacionado:** [Tríada Emergente](https://github.com/sgarcia87/Triada-emergente), [IA_m](https://github.com/sgarcia87/IA_m) y [Q-Reality-12D](https://github.com/sgarcia87/Q-Reality-12D).
 
-El proyecto presenta una construcción matemática reproducible y una lectura filosófica personal. No pretende demostrar una teoría física de la consciencia, del universo ni de la geometría sagrada. La escultura de madera está en fase conceptual; las dimensiones, ensamblajes y tolerancias deben cerrarse antes de fabricarla.
+El proyecto presenta una construcción matemática reproducible y una lectura filosófica personal. No pretende demostrar una teoría física de la consciencia, del universo ni de la geometría sagrada. El modelo tridimensional es una visualización interactiva de la construcción algebraica, sus simetrías y sus relaciones geométricas.
 
 **Licencia:** pendiente de elección por el autor. No se incluye una licencia automática.

@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#11100e">
+  <meta name="description" content="Cubo Mágico 64: una construcción matemática sobre GF(4) con doce planos mágicos, una estrella octángula y una lectura simbólica de la unidad y sus partes. Modelo tridimensional interactivo.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Cubo 64 · Matemática, geometría y símbolo">
+  <meta property="og:description" content="64 posiciones. 12 planos mágicos. Dos tetraedros regulares de suma 64. Un proyecto de geometría y reflexión simbólica.">
+  <title>Cubo 64 — Matemática, geometría y símbolo</title>
+  <style>
+    :root{color-scheme:dark;--bg:#100f0d;--surface:#1b1814;--soft:#272118;--line:#4e3f30;--text:#f5eee3;--muted:#b8aa96;--gold:#e9bd78;--teal:#7dd3cb;--green:#a3d7aa}
+    *{box-sizing:border-box} html{scroll-behavior:smooth;scroll-padding-top:80px} body{margin:0;background:var(--bg);color:var(--text);font:15px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif}
+    a{color:inherit} .wrap{max-width:1120px;margin:auto;padding:0 22px} .topbar{position:sticky;top:0;z-index:50;background:rgba(16,15,13,.94);border-bottom:1px solid #3a3028;backdrop-filter:blur(14px)}
+    .topinner{display:flex;justify-content:space-between;align-items:center;gap:16px;min-height:68px}.brand{font:700 20px/1 Georgia,serif;text-decoration:none;letter-spacing:.025em}.brand span{color:var(--gold)}.navlinks{display:flex;gap:22px;flex-wrap:wrap}.navlinks a{font-size:13px;color:#c4b8a7;text-decoration:none}.navlinks a:hover{color:var(--gold)}
+    .eyebrow{color:var(--gold);font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:700}.hero{padding:80px 0 58px;background:radial-gradient(ellipse at 76% 20%,rgba(168,113,53,.15),transparent 55%)}
+    h1,h2,h3{font-family:Georgia,'Times New Roman',serif;font-weight:500;line-height:1.15}h1{font-size:clamp(48px,8vw,98px);letter-spacing:-.055em;margin:16px 0 24px;max-width:800px}h1 em{font-style:normal;color:var(--gold)}h2{font-size:clamp(30px,4vw,48px);letter-spacing:-.028em;margin:9px 0 18px}h3{font-size:23px;margin:0 0 10px}p{color:var(--muted);margin:8px 0 16px}.lead{font-size:clamp(17px,2.25vw,21px);max-width:700px;color:#dbd0c1}.section{padding:62px 0;border-top:1px solid #302820}.section-header{max-width:760px;margin-bottom:27px}.section-kicker{font-size:12px;letter-spacing:.15em;color:var(--gold);text-transform:uppercase;font-weight:700}
+    .cta-row{display:flex;gap:11px;flex-wrap:wrap;margin-top:28px}.cta{display:inline-flex;justify-content:center;align-items:center;gap:8px;border-radius:8px;text-decoration:none;padding:12px 18px;font-weight:600;font-size:14px;border:1px solid #826440;background:#8b6538;color:#fff4df}.cta.secondary{background:transparent;color:#f1e1cb;border-color:#665340}.cta:hover{filter:brightness(1.12)}
+    .metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;margin-top:40px;background:#3d3226;border:1px solid #3d3226;border-radius:12px;overflow:hidden}.metric{background:#211b15;padding:23px 18px}.metric b{display:block;font:700 clamp(25px,3.8vw,39px)/1.2 Georgia,serif;color:#e9bd78}.metric span{font-size:12px;color:#c6b8a6}
+    .viewer-shell{background:#211b15;border:1px solid #5b4734;border-radius:16px;padding:15px}.viewer-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(265px,.76fr);gap:22px}.stage{position:relative;background:radial-gradient(ellipse at 50% 44%,#60452a,#15110d 76%);border:1px solid #382d21;border-radius:11px;overflow:hidden}.stage canvas{display:block;width:100%;height:495px;touch-action:none;cursor:grab}.hint{position:absolute;top:12px;left:12px;background:#16110ddc;color:#dcc9ae;font-size:12px;padding:5px 9px;border-radius:6px;pointer-events:none}.tetraLegend{position:absolute;left:10px;right:10px;bottom:12px;display:flex;justify-content:center;gap:6px;flex-wrap:wrap;pointer-events:none}.tetraLegend span{font-size:12px;padding:5px 9px;background:#14110dea;border:1px solid #6d553b;border-radius:7px;color:#f2e9dc}.tetraLegend .gold{border-color:var(--gold)}.tetraLegend .teal{border-color:var(--teal)}.tetraLegend[hidden]{display:none!important}.stage.hex-mode .hint,.stage.tetra-mode .hint,.stage.symbol-mode .hint{display:none}.stage.hex-mode .tetraLegend,.stage.symbol-mode .tetraLegend{position:static;padding:9px 5px 11px;background:#14110e}
+    button,select{font:inherit;color:var(--text);background:#33281e;border:1px solid #745a40;border-radius:8px;cursor:pointer;padding:10px 12px;max-width:100%}button:hover{background:#463322}button:focus-visible,select:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(--teal);outline-offset:3px}button[aria-pressed=true]{background:#805a33;border-color:var(--gold)}.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.row button{font-size:13px}.controls{display:flex;flex-direction:column;gap:15px}label{display:flex;flex-direction:column;gap:6px;color:#d5c6b4;font-size:13px}input[type=range]{width:100%;accent-color:var(--gold)}.status{border:1px solid #64523c;background:#191612;border-radius:9px;padding:13px;font-size:13px;color:#e2d2bf}.status b{color:#fff4e2}.data-line{display:flex;gap:10px;justify-content:space-between;align-items:baseline;padding:8px 0;border-bottom:1px solid #4a392a;font-size:13px}.data-line span{color:var(--muted)}.data-line strong{text-align:right}
+    .two-col{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:19px}.three-col{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.feature{background:#1d1915;border:1px solid #4a392b;padding:24px;border-radius:12px}.feature h3{font-size:23px}.feature .num{font:700 36px Georgia,serif;color:var(--gold);padding:5px 0 12px}.feature p{font-size:14px}.feature strong{color:#efe0ca}
+    .eq{padding:22px 16px;border:1px solid #6c5236;border-radius:10px;background:linear-gradient(135deg,#2d2217,#1a1713);font:500 clamp(25px,5vw,45px) Georgia,serif;color:var(--gold);text-align:center;margin:24px 0}.small-eq{font:600 20px Georgia,serif;color:#e7d5bd}.caption{font-size:12px;color:#b5a691}.table-wrap{overflow-x:auto}.table{border-collapse:collapse;width:100%;font-size:14px}.table th,.table td{text-align:left;padding:11px 12px;border-bottom:1px solid #43372c}.table th{color:#dbc7ac;font-weight:600}.mono{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}.code{white-space:pre-wrap;overflow-wrap:anywhere;font:13px/1.75 ui-monospace,Consolas,monospace;color:#ead3aa;background:#14110e;border:1px solid #453a2c;padding:18px;border-radius:10px}
+    .planes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}.plane{background:#1c1713;border:1px solid #544532;border-radius:9px;padding:14px}.plane h3{font-family:system-ui,sans-serif;font-weight:650;font-size:14px;margin:0 0 10px}.matrix{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:3px;max-width:280px}.cell{background:#dfbf91;border:1px solid #785734;border-radius:3px;color:#322213;font:600 15px ui-monospace,monospace;aspect-ratio:1;padding:0;display:grid;place-items:center}.cell[aria-pressed=true]{background:#91d7cf;color:#1b3f3c;outline:2px solid #74d5cd}.plane small{display:block;font-size:11px;color:#ab9a86;margin-top:8px}.audit{padding:8px 11px;border:1px solid #4b3c2e;border-radius:6px;font-size:13px;margin:6px 0}.audit .ok{color:var(--green)}.audit .fail{color:#f2a399}.pair-list{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}.pair{border:1px solid #51402d;background:#241b15;border-radius:7px;padding:9px;min-width:0;text-align:center;font-size:11px}.pair small{color:#b8a998}.pair b{display:block;color:#f0d2a6;font-size:15px}.symbolgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.symbolgrid>div{border-left:2px solid #98714a;padding:5px 10px;color:#ccbcaa;font-size:13px}.symbolgrid b{display:block;color:#f6eadc}.note{background:#1a1713;border:1px solid #594635;padding:14px;border-radius:8px;color:#dccfbd;font-size:13px}.note strong{color:#f5e7d3}details{background:#1d1915;border:1px solid #47392c;border-radius:10px;padding:17px;margin-top:12px}details summary{cursor:pointer;font-weight:650;color:#ead7bc}details[open] summary{margin-bottom:12px}.foot{border-top:1px solid #3c3025;padding:38px 0 60px;color:#b1a491;font-size:13px}.foot a{color:#daba8c}.foot-inner{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}.sr-only{position:absolute;clip:rect(0,0,0,0);width:1px;height:1px;overflow:hidden}
+    @media(max-width:900px){.viewer-grid,.two-col{grid-template-columns:1fr}.three-col{grid-template-columns:1fr 1fr}.planes{grid-template-columns:repeat(2,minmax(0,1fr))}.stage canvas{height:410px}.hero{padding:56px 0 45px}}
+    @media(max-width:600px){.wrap{padding:0 15px}.topinner{min-height:60px}.navlinks{gap:12px}.navlinks a{font-size:12px}.hero{padding:52px 0 40px}h1{font-size:clamp(44px,11vw,62px)}.metrics{grid-template-columns:repeat(2,1fr)}.metric{padding:18px 14px}.three-col{grid-template-columns:1fr}.stage canvas{height:360px}.viewer-shell{padding:10px}.planes{grid-template-columns:repeat(2,minmax(0,1fr))}.plane{padding:9px}.cell{font-size:12px}.pair-list{grid-template-columns:repeat(2,1fr)}.feature{padding:19px}.section{padding:45px 0}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  </style>
+</head>
+<body>
+  <nav class="topbar" aria-label="Navegación principal"><div class="topinner wrap"><a class="brand" href="#inicio">CUBO <span>64</span></a><div class="navlinks"><a href="#explorar">Explorar</a><a href="#matematica">Matemática</a><a href="#simbolismo">Simbolismo</a><a href="#metodo">Método</a></div></div></nav>
+  <main>
+    <header class="hero" id="inicio"><div class="wrap"><div class="eyebrow">Geometría · matemáticas · interpretación simbólica</div><h1>Un cubo.<br><em>Muchas perspectivas.</em></h1><p class="lead">El Cubo Mágico 64 es una construcción tridimensional de 64 posiciones: doce secciones cuadradas mágicas, una estrella octángula oculta en sus vértices y un vínculo entre el equilibrio de las partes y la unidad del conjunto.</p><div class="cta-row"><a class="cta" href="#explorar">Explorar el cubo en 3D</a><a class="cta secondary" href="#matematica">Conocer las matemáticas</a></div><div class="metrics"><div class="metric"><b>64</b><span>Posiciones · 4 × 4 × 4</span></div><div class="metric"><b>12</b><span>Planos mágicos</span></div><div class="metric"><b>72 / 76</b><span>Líneas de suma 64</span></div><div class="metric"><b>2</b><span>Tetraedros regulares</span></div></div></div></header>
+
+    <section class="section" id="explorar"><div class="wrap"><div class="section-header"><span class="section-kicker">01 / Exploración interactiva</span><h2>Una estructura, cinco formas de observarla.</h2><p>Gira el modelo con el dedo o el ratón. Cambia el modo para descubrir qué relaciones aparecen al mirar el mismo conjunto desde otra perspectiva.</p></div><div class="viewer-shell"><div class="viewer-grid"><div><div class="stage"><canvas id="view" aria-label="Modelo tridimensional interactivo del Cubo Mágico 64">Tu navegador no admite canvas; las ecuaciones y las tablas siguen disponibles más abajo.</canvas><div class="hint">Arrastra para girar · toca una casilla</div><div class="tetraLegend" id="tetraLegend" hidden></div></div><div class="row" style="margin-top:12px"><button type="button" id="numbers" aria-pressed="true">Números</button><button type="button" id="cuts" aria-pressed="true">Caras interiores</button><button type="button" id="axisView">Vista axial</button><button type="button" id="reset">Restablecer</button></div><label style="margin-top:14px">Separar los ocho octantes · <span id="seplabel">0 %</span><input id="sep" type="range" min="0" max="100" value="0"></label><div class="status" id="selected" style="margin-top:10px" aria-live="polite">Toca una casilla para consultar su coordenada y su número.</div></div><div class="controls"><label for="mode">Modo de visualización<select id="mode"><option value="object">Cubo completo · números</option><option value="inside">Ocho octantes · interior</option><option value="hex">Hexagrama · vista diagonal</option><option value="tetra">Estrella octángula · tetraedros</option><option value="nested">Cubo exterior y núcleo</option><option value="symbol">Interpretación simbólica</option></select></label><div class="status" id="modeInfo" aria-live="polite">El cubo tiene seis caras exteriores y seis secciones interiores mágicas. Al desmontar los octantes se hacen visibles algunas de sus relaciones internas.</div><div class="data-line"><span>Numeración</span><strong>Impares del 1 al 31</strong></div><div class="data-line"><span>Constante mágica</span><strong>64</strong></div><div class="data-line"><span>Construcción</span><strong>GF(4) · tres ejes</strong></div><div class="row"><button id="presetSolid">Cubo</button><button id="presetOpen">Abrir</button><button id="presetHex">Hexagrama</button><button id="presetTetra">Tetraedros</button><button id="presetNested">Núcleo</button><button id="presetSymbol">Símbolo</button></div></div></div></div></div></section>
+
+    <section class="section" id="idea"><div class="wrap"><div class="section-header"><span class="section-kicker">02 / La idea</span><h2>De la superficie al interior.</h2><p>El cubo no consiste en seis cuadrados mágicos independientes pegados a una caja. Todos sus números se obtienen mediante una única regla de tres coordenadas, de modo que las secciones comparten estructura.</p></div><div class="three-col"><article class="feature"><div class="num">4 × 4 × 4</div><h3>El espacio</h3><p>64 posiciones organizadas en tres ejes. Cada punto recibe un valor calculado a partir de sus coordenadas.</p></article><article class="feature"><div class="num">12 planos</div><h3>El equilibrio</h3><p>Cada sección de coordenada fija contiene una vez los 16 números impares de 1 a 31. Filas, columnas y diagonales principales suman 64.</p></article><article class="feature"><div class="num">72 líneas</div><h3>El límite</h3><p>De 76 líneas rectas consideradas, 72 suman 64. Las cuatro diagonales espaciales no cumplen: el resultado no se presenta como un cubo mágico perfecto.</p></article></div></div></section>
+
+    <section class="section" id="matematica"><div class="wrap"><div class="section-header"><span class="section-kicker">03 / Base matemática</span><h2>Una regla genera todo el cubo.</h2><p>Trabajamos con cuatro elementos por coordenada, identificados con el campo finito GF(4). La suma se expresa como XOR en la codificación binaria utilizada.</p></div><div class="two-col"><div><div class="code">x, y, z ∈ {0, 1, 2, 3}
+
+u = x ⊕ (2·y) ⊕ (3·z)
+v = x ⊕ (3·y) ⊕ (2·z)
+
+F(x,y,z) = 1 + 2(4u + v)</div><p class="caption">Los productos 2·y y 3·y son operaciones del campo GF(4), no multiplicaciones ordinarias de enteros.</p></div><div><h3>¿Por qué aparece 64?</h3><p>En cualquier plano, los valores son los 16 impares del 1 al 31, cuya suma total es 256. Al distribuirlos en cuatro filas mágicas, cada fila suma <strong>256 / 4 = 64</strong>.</p><div class="eq">1 + 3 + ⋯ + 31 = 256</div></div></div><details><summary>Ver las seis caras exteriores y las seis secciones interiores</summary><p>Selecciona una cifra de una matriz para localizar la misma coordenada en el visor.</p><div class="row" style="margin-bottom:12px"><button id="outside" aria-pressed="true">Exteriores</button><button id="interior" aria-pressed="false">Interiores</button></div><div class="planes" id="planes"></div><p class="caption">Las secciones interiores corresponden a X, Y y Z = 1 o 2; no deben confundirse con seis cortes físicos independientes.</p></details><details><summary>Comprobaciones matemáticas reproducibles</summary><div id="audits" aria-live="polite"></div><p class="caption">Las cuatro diagonales espaciales suman 4, 52, 76 y 124, en vez de 64. Se documentan también las simetrías y los tetraedros.</p></details></div></section>
+
+    <section class="section" id="estrella"><div class="wrap"><div class="section-header"><span class="section-kicker">04 / Geometría emergente</span><h2>Dos triángulos, dos tetraedros, una estrella.</h2><p>Al mirar el cubo a lo largo de su diagonal principal, seis esquinas forman un hexagrama. En tres dimensiones, esas esquinas y los dos vértices restantes forman dos tetraedros regulares complementarios: la <strong>estrella octángula</strong>.</p></div><div class="eq">31 + 13 + 19 + 1 = 64</div><div class="two-col"><article class="feature"><h3>Triángulo A</h3><p class="mono">(3,0,0) → 31<br>(0,3,0) → 13<br>(0,0,3) → 19</p><p>El punto opuesto <span class="mono">(3,3,3)</span> vale 1 y completa el tetraedro A.</p></article><article class="feature"><h3>Triángulo B</h3><p class="mono">(0,3,3) → 31<br>(3,0,3) → 13<br>(3,3,0) → 19</p><p>El punto opuesto <span class="mono">(0,0,0)</span> vale 1 y completa el tetraedro B.</p></article></div><div class="note" style="margin-top:16px"><strong>Propiedad exacta:</strong> las seis aristas de cada tetraedro miden 3√2, ambos suman 64 en sus vértices y comparten centroide (1,5; 1,5; 1,5). El centro geométrico no es una de las 64 posiciones numeradas. La relación 63 + 1 = 64 es una suma de vértices, no una línea mágica adicional.</div><div class="row" style="margin-top:14px"><button id="triBoth" aria-pressed="true">Ambos tetraedros</button><button id="triA" aria-pressed="false">Solo A</button><button id="triB" aria-pressed="false">Solo B</button><button id="alignAxis">Vista desde el eje</button></div></div></section>
+
+    <section class="section" id="simbolismo"><div class="wrap"><div class="section-header"><span class="section-kicker">05 / Lectura simbólica</span><h2>La parte y el todo.</h2><p>La interpretación se inspira en el manuscrito <em>La Realidad</em>, especialmente en su recorrido desde la dualidad al cubo, el hexágono y los dos triángulos invertidos. Lo simbólico se presenta como una lectura de la geometría, no como una demostración científica sobre la consciencia.</p></div><div class="three-col"><div class="feature"><div class="eyebrow">Naturaleza</div><h3>Cubo exterior</h3><p>La estructura que contiene todos los puntos y sus relaciones. Ocho esquinas y sus conexiones tridimensionales.</p></div><div class="feature"><div class="eyebrow">Mente</div><h3>Núcleo interior</h3><p>Los ocho vértices de la retícula 2 × 2 × 2 interior repiten exactamente los valores de las ocho esquinas exteriores.</p></div><div class="feature"><div class="eyebrow">Consciencia</div><h3>Estrella octángula</h3><p>Dos triángulos complementarios que generan dos tetraedros regulares. La interpretación de equilibrio y síntesis es filosófica.</p></div></div><div class="note" style="margin-top:16px"><strong>El 1 y el centro:</strong> cuatro posiciones consecutivas de la diagonal (t,t,t) tienen valor 1. Desde esa dirección se superponen en el centro del hexagrama. El <strong>Cuerpo</strong>, mencionado en el manuscrito como nivel intermedio, permanece como propuesta simbólica: todavía no hemos definido un tercer cubo matemático equivalente.</div></div></section>
+
+    <section class="section" id="nucleo"><div class="wrap"><div class="section-header"><span class="section-kicker">06 / Estructura interior</span><h2>Ocho valores que se repiten a otra escala.</h2><p>Los vértices exteriores con coordenadas en {0,3}³ corresponden exactamente a los vértices interiores con coordenadas en {1,2}³, sustituyendo 0 → 1 y 3 → 2 en cada eje. Es una correspondencia de ocho números, no una segunda retícula completa de 64 posiciones.</p></div><div class="row" style="margin-bottom:16px"><button id="showNested">Mostrar el núcleo en 3D</button></div><div class="pair-list" id="cornerPairs"></div></div></section>
+
+    <section class="section" id="metodo"><div class="wrap"><div class="section-header"><span class="section-kicker">07 / Alcance del proyecto</span><h2>Qué se ha demostrado y qué se propone.</h2><p>La construcción numérica y geométrica es reproducible. La escultura de madera es una propuesta material que debe desarrollar todavía sus uniones, tolerancias y método de grabado.</p></div><div class="two-col"><article class="feature"><h3>Verificado</h3><p>La función GF(4), los doce planos de suma 64, las 72 líneas mágicas, las cuatro diagonales espaciales excepcionales, la simetría central, los dos tetraedros regulares y el núcleo con ocho valores correspondientes.</p></article><article class="feature"><h3>En desarrollo</h3><p>La pieza desmontable de ocho octantes, la forma de mostrar las secciones interiores y la posibilidad de expresar la autosimilitud en la madera. La construcción finita no equivale por sí sola a un fractal geométrico infinito.</p></article></div><details><summary>La investigación fractal relacionada</summary><p>Además de la obra de suma 64, se estudió la familia continua Fλ = 16 + λ(F − 16). Su extremo λ = 16/15 equivale, tras una reescala, a la semilla G = (F − 1)/2 con valores del 0 al 15 y constante mágica 30. Cuatro posiciones son cero y, al iterar por producto, el soporte autosimilar tiene dimensión log₄(60). Es una rama matemática distinta de la pieza principal, que no tiene huecos obligatorios.</p></details><details><summary>Proyectos y antecedentes de esta investigación</summary><p><a href="https://github.com/sgarcia87/IA_m" target="_blank" rel="noopener noreferrer">IA_m</a> (dualidad y grafos), <a href="https://github.com/sgarcia87/Triada-emergente" target="_blank" rel="noopener noreferrer">Tríada Emergente</a> (equilibrio, Hadamard y simetrías discretas) y <a href="https://github.com/sgarcia87/Q-Reality-12D" target="_blank" rel="noopener noreferrer">Q-Reality-12D</a> (restricciones binarias). Las conexiones conceptuales no deben confundirse con una equivalencia demostrada entre todos los proyectos.</p></details></div></section>
+  </main>
+  <footer class="foot"><div class="wrap foot-inner"><div><strong>CUBO 64</strong><div>Investigación matemática y lectura simbólica · Sergi Garcia Mecinas</div></div><div>Obra conceptual · HTML autónomo · <a href="#inicio">Volver arriba</a></div></div></footer>
+  <script>
+
+(()=>{'use strict';
+const $=id=>document.getElementById(id), mul2=[0,2,3,1],mul3=[0,3,1,2];
+function F(x,y,z){let u=x^mul2[y]^mul3[z],v=x^mul3[y]^mul2[z];return 1+2*(4*u+v)}
+let st={rx:.48,ry:-.76,sep:0,nums:true,cuts:true,mode:'object',selected:null,inside:false,triad:'both'};let hits=[];
+const defs=[
+{a:0,s:-1,c:[[0,0,0],[0,0,1],[0,1,1],[0,1,0]]},
+{a:0,s: 1,c:[[1,0,1],[1,0,0],[1,1,0],[1,1,1]]},
+{a:1,s:-1,c:[[0,0,0],[1,0,0],[1,0,1],[0,0,1]]},
+{a:1,s: 1,c:[[1,1,0],[0,1,0],[0,1,1],[1,1,1]]},
+{a:2,s:-1,c:[[0,0,0],[0,1,0],[1,1,0],[1,0,0]]},
+{a:2,s: 1,c:[[0,1,1],[1,1,1],[1,0,1],[0,0,1]]}];
+function spin([x,y,z]){const cy=Math.cos(st.ry),sy=Math.sin(st.ry),cx=Math.cos(st.rx),sx=Math.sin(st.rx),X=cy*x+sy*z,Z=-sy*x+cy*z;return[X,cx*y-sx*Z,sx*y+cx*Z]}
+function project(p,w,h){let [x,y,z]=spin(p),scale=Math.min(w,h)*(st.mode==='hex'?.100:.127),k=st.mode==='hex'?1:6/(6-z*.12);return{x:w/2+x*scale*k,y:h/2-y*scale*k,z}}
+function nAt(q,a,s){let n=q.slice();n[a]+=s;return n[a]<0||n[a]>3?null:n}
+function polygon(ctx,q,fill,stroke,alpha=1){ctx.save();ctx.globalAlpha=alpha;ctx.beginPath();ctx.moveTo(q[0].x,q[0].y);for(let i=1;i<q.length;i++)ctx.lineTo(q[i].x,q[i].y);ctx.closePath();ctx.fillStyle=fill;ctx.fill();ctx.strokeStyle=stroke;ctx.lineWidth=.7;ctx.stroke();ctx.restore()}
+function line(ctx,a,b,color,width=1){ctx.strokeStyle=color;ctx.lineWidth=width;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke()}
+function drawShell(ctx,w,h,side,color,width){let pts=[];for(let x of [-side,side])for(let y of [-side,side])for(let z of [-side,side])pts.push(project([x,y,z],w,h)); for(let i=0;i<8;i++)for(let j=i+1;j<8;j++){let n=((i^j)&1)+(((i^j)>>1)&1)+(((i^j)>>2)&1);if(n===1)line(ctx,pts[i],pts[j],color,width)}}
+function drawTetraStructure(ctx,w,h,labelsMode,option={}){
+ const xyz=p=>project(p.map(q=>(q-1.5)*(3.7/3)),w,h);
+ const pair=[
+  {id:'A',base:[[3,0,0],[0,3,0],[0,0,3]],apex:[3,3,3],stroke:'#e9bd78',fill:'rgba(233,189,120,.14)'},
+  {id:'B',base:[[0,3,3],[3,0,3],[3,3,0]],apex:[0,0,0],stroke:'#7dd3cb',fill:'rgba(125,211,203,.13)'}
+ ];
+ if(!option.noShell)drawShell(ctx,w,h,1.85,'rgba(233,189,120,.3)',1.15);
+ const lo=xyz([0,0,0]),hi=xyz([3,3,3]),mid=xyz([1.5,1.5,1.5]);
+ ctx.save();ctx.setLineDash([4,5]);line(ctx,lo,hi,'rgba(255,249,232,.46)',1.5);ctx.restore();
+ let faces=[],edges=[],labels=[];
+ for(const T of pair){
+  if(!option.both && st.triad!=='both' && st.triad!==T.id)continue;
+  const vertices=[...T.base,T.apex],pp=vertices.map(xyz);
+  for(const inds of [[0,1,2],[0,1,3],[0,2,3],[1,2,3]]){
+    const pts=inds.map(i=>pp[i]);
+    const center=inds.map(i=>vertices[i]).reduce((a,p)=>a.map((t,k)=>t+p[k]/3),[0,0,0]);
+    faces.push({pts,depth:spin(center.map(q=>(q-1.5)*(3.7/3)))[2],fill:T.fill,stroke:T.stroke});
+  }
+  for(let i=0;i<4;i++)for(let j=i+1;j<4;j++)edges.push({p:pp[i],q:pp[j],color:T.stroke});
+  if(labelsMode)for(let i=0;i<4;i++)labels.push({p:pp[i],v:F(...vertices[i]),color:T.stroke});
+ }
+ faces.sort((a,b)=>a.depth-b.depth);
+ for(const f of faces){ctx.beginPath();ctx.moveTo(f.pts[0].x,f.pts[0].y);ctx.lineTo(f.pts[1].x,f.pts[1].y);ctx.lineTo(f.pts[2].x,f.pts[2].y);ctx.closePath();ctx.fillStyle=f.fill;ctx.fill();}
+ for(const e of edges)line(ctx,e.p,e.q,e.color,2.3);
+ if(labelsMode){
+  const radius=Math.max(13,Math.min(16,w*.035));
+  for(const l of labels){
+   let vx=l.p.x-mid.x,vy=l.p.y-mid.y,den=Math.hypot(vx,vy)||1,ux=vx/den,uy=vy/den;
+   let x=Math.max(radius+5,Math.min(w-radius-5,l.p.x+ux*(radius+16)));
+   let y=Math.max(radius+6,Math.min(h-radius-34,l.p.y+uy*(radius+16)));
+   ctx.beginPath();ctx.moveTo(l.p.x+ux*5,l.p.y+uy*5);ctx.lineTo(x-ux*radius,y-uy*radius);ctx.strokeStyle=l.color;ctx.lineWidth=1.2;ctx.stroke();
+   ctx.beginPath();ctx.arc(x,y,radius,0,Math.PI*2);ctx.fillStyle='#18130f';ctx.fill();ctx.strokeStyle=l.color;ctx.lineWidth=2;ctx.stroke();
+   ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='bold '+Math.round(radius*.92)+'px ui-monospace,monospace';ctx.fillStyle='#fff5e0';ctx.fillText(String(l.v),x,y+.4);
+  }
+ }
+ ctx.beginPath();ctx.arc(mid.x,mid.y,4,0,Math.PI*2);ctx.fillStyle='#fff4da';ctx.fill();
+}
+function pointXYZ(p,w,h){return project(p.map(q=>(q-1.5)*(3.7/3)),w,h)}
+function drawHex(ctx,w,h){
+ const A=[[3,0,0],[0,3,0],[0,0,3]], B=[[0,3,3],[3,0,3],[3,3,0]];
+ const T=[{id:'A',nodes:A,c:'#e9bd78',fill:'rgba(233,189,120,.14)'},{id:'B',nodes:B,c:'#7dd3cb',fill:'rgba(125,211,203,.13)'}];
+ drawShell(ctx,w,h,1.85,'rgba(233,189,120,.29)',1.1);
+ const c=pointXYZ([1.5,1.5,1.5],w,h),labels=[];
+ // First draw all geometry. Draw number labels after lines so no stroke crosses a digit.
+ for(const t of T){if(st.triad!=='both'&&st.triad!==t.id)continue;
+   const pts=t.nodes.map(p=>pointXYZ(p,w,h));
+   ctx.beginPath();ctx.moveTo(pts[0].x,pts[0].y);ctx.lineTo(pts[1].x,pts[1].y);ctx.lineTo(pts[2].x,pts[2].y);ctx.closePath();
+   ctx.fillStyle=t.fill;ctx.fill();ctx.strokeStyle=t.c;ctx.lineWidth=3;ctx.stroke();
+   for(let i=0;i<3;i++){
+     const p=pts[i];ctx.beginPath();ctx.arc(p.x,p.y,5.5,0,2*Math.PI);ctx.fillStyle=t.c;ctx.fill();
+     labels.push({p,text:String(F(...t.nodes[i])),color:t.c});
+   }
+ }
+ // Radially offset, high-contrast pills remain legible on phone-sized canvases.
+ const r=Math.max(15,Math.min(18,w*.038)), gap=r+15;
+ for(const item of labels){
+   const dx=item.p.x-c.x,dy=item.p.y-c.y, norm=Math.hypot(dx,dy)||1;
+   const ux=dx/norm,uy=dy/norm;
+   const bx=Math.max(r+5,Math.min(w-r-5,item.p.x+ux*gap));
+   const by=Math.max(r+6,Math.min(h-r-9,item.p.y+uy*gap));
+   ctx.beginPath();ctx.moveTo(item.p.x+ux*6,item.p.y+uy*6);ctx.lineTo(bx-ux*(r-1),by-uy*(r-1));
+   ctx.strokeStyle=item.color;ctx.lineWidth=1.6;ctx.stroke();
+   ctx.beginPath();ctx.arc(bx,by,r,0,2*Math.PI);ctx.fillStyle='#15120f';ctx.fill();
+   ctx.strokeStyle=item.color;ctx.lineWidth=2.5;ctx.stroke();
+   ctx.font='700 '+Math.round(r*.98)+'px ui-monospace, monospace';ctx.fillStyle='#fff8e9';
+   ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(item.text,bx,by+0.5);
+ }
+ const center=pointXYZ([1.5,1.5,1.5],w,h);
+ ctx.beginPath();ctx.arc(center.x,center.y,19,0,2*Math.PI);ctx.fillStyle='#f4eadb';ctx.fill();
+ ctx.strokeStyle='#9c835a';ctx.lineWidth=1.5;ctx.stroke();
+ ctx.font='bold 19px Georgia,serif';ctx.fillStyle='#30210f';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('1',center.x,center.y);
+ // The four coincident axis points are described in the legend, not over the triangles.
+}
+function drawNested(ctx,w,h){
+ const a0=[0,3],a1=[1,2];const outer=[],inner=[];
+ for(const x of a0)for(const y of a0)for(const z of a0){const p=[x,y,z],q=p.map(v=>v===0?1:2);outer.push({p,pt:pointXYZ(p,w,h),v:F(...p)});inner.push({p:q,pt:pointXYZ(q,w,h),v:F(...q)});}
+ // draw the structure first, edges and exact corresponding points second
+ drawShell(ctx,w,h,1.85,'rgba(233,189,120,.82)',2.0);
+ drawShell(ctx,w,h,1.85/3,'rgba(125,211,203,.98)',2.2);
+ for(let i=0;i<8;i++){ctx.save();ctx.setLineDash([2,5]);line(ctx,outer[i].pt,inner[i].pt,'rgba(220,204,171,.45)',1);ctx.restore();}
+ function drawPts(items,color,r){for(const it of items){const p=it.pt;ctx.beginPath();ctx.arc(p.x,p.y,r,0,2*Math.PI);ctx.fillStyle=color;ctx.fill();ctx.strokeStyle='#1b1712';ctx.lineWidth=1;ctx.stroke();ctx.font='bold 11px ui-monospace,monospace';ctx.fillStyle='#f9eed9';ctx.textAlign='left';ctx.textBaseline='bottom';ctx.fillText(String(it.v),p.x+r+2,p.y-2)}}
+ drawPts(outer,'#e9bd78',5.5);drawPts(inner,'#7dd3cb',4.5);
+ const c=pointXYZ([1.5,1.5,1.5],w,h);ctx.beginPath();ctx.arc(c.x,c.y,4.3,0,2*Math.PI);ctx.fillStyle='#fff9ec';ctx.fill();
+}
+function drawSymbolic(ctx,w,h){
+ drawShell(ctx,w,h,1.85,'rgba(233,189,120,.85)',2.1);
+ drawShell(ctx,w,h,1.85/3,'rgba(154,205,230,.86)',2.0);
+ drawTetraStructure(ctx,w,h,false,{both:true,noShell:true});
+ const mid=pointXYZ([1.5,1.5,1.5],w,h);
+ ctx.beginPath();ctx.arc(mid.x,mid.y,13,0,Math.PI*2);ctx.fillStyle='#e8dfc8';ctx.fill();ctx.strokeStyle='#bdaa79';ctx.lineWidth=1.2;ctx.stroke();
+ ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='bold 15px Georgia,serif';ctx.fillStyle='#302014';ctx.fillText('1',mid.x,mid.y);
+}
+function redraw(){$('view').parentElement.classList.toggle('hex-mode',st.mode==='hex');$('view').parentElement.classList.toggle('symbol-mode',st.mode==='symbol');$('view').parentElement.classList.toggle('tetra-mode',st.mode==='tetra');let legend=$('tetraLegend');if(legend){legend.hidden=!(st.mode==='hex'||st.mode==='tetra'||st.mode==='nested'||st.mode==='symbol');if(!legend.hidden){legend.innerHTML=st.mode==='symbol'?'<span class="gold">Naturaleza: cubo exterior</span><span class="teal">Mente: núcleo</span><span>Consciencia: estrella</span><span>Eje: 1</span>':st.mode==='nested'?'<span class="gold">Exterior: {0,3}³</span><span class="teal">Núcleo: {1,2}³</span>':(st.triad==='both'||st.triad==='A'?'<span class="gold">A · 63 + 1 = 64</span>':'')+(st.triad==='both'||st.triad==='B'?'<span class="teal">B · 63 + 1 = 64</span>':'')+(st.mode==='hex'?'<span>Eje: cuatro valores 1</span>':'');}}let cv=$('view'),ctx=cv.getContext('2d'),w=cv.clientWidth,h=cv.clientHeight;if(!w||!h)return;let d=Math.min(2,devicePixelRatio||1);cv.width=Math.round(w*d);cv.height=Math.round(h*d);ctx.setTransform(d,0,0,d,0,0);ctx.clearRect(0,0,w,h);hits=[];let surfaces=[];
+for(let x=0;x<4;x++)for(let y=0;y<4;y++)for(let z=0;z<4;z++){let q=[x,y,z],oct=q.map(v=>v>>1),gap=oct.map(v=>(v?1:-1)*st.sep*.52);
+ for(let f of defs){let nn=nAt(q,f.a,f.s),outer=nn===null,cut=!!nn&&oct[f.a]!==nn[f.a]>>1;
+ if(st.sep<.015){if(!outer)continue;}else if(!outer&&!cut)continue;
+ if(st.mode==='hex'||st.mode==='tetra'||st.mode==='nested'||st.mode==='symbol')continue;
+ let normal=[0,0,0];normal[f.a]=f.s;if(spin(normal)[2]<.015)continue;
+ let v=f.c.map(p=>project(p.map((a,i)=>q[i]-2+a+gap[i]),w,h));surfaces.push({q:v,dep:v.reduce((a,b)=>a+b.z,0)/4,x,y,z,f,outer,cut});
+ }}
+surfaces.sort((a,b)=>a.dep-b.dep);
+for(let f of surfaces){let {q,x,y,z,outer,cut}=f,sel=st.selected&&st.selected[0]===x&&st.selected[1]===y&&st.selected[2]===z;let colors=['#b78a55','#c8a06f','#bd9565','#ac7e4b','#a97543','#c59b68'];let fill=sel?'#8ad9d1':colors[f.f.a*2+(f.f.s>0?1:0)];if(cut)fill=sel?'#8ad9d1':'#906840';polygon(ctx,q,fill,sel?'#ffffff':'#553820');let cx=q.reduce((a,p)=>a+p.x,0)/4,cy=q.reduce((a,p)=>a+p.y,0)/4,ed=Math.min(Math.hypot(q[1].x-q[0].x,q[1].y-q[0].y),Math.hypot(q[2].x-q[1].x,q[2].y-q[1].y));if(st.nums&&(outer||(st.cuts&&cut))&&ed>15){ctx.font=`600 ${Math.min(19,Math.max(10,ed*.48))}px Georgia,serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='#2c1b10';ctx.fillText(F(x,y,z),cx,cy)}hits.push(f)}
+if(st.mode==='hex')drawHex(ctx,w,h);
+if(st.mode==='tetra')drawTetraStructure(ctx,w,h,true);
+if(st.mode==='nested')drawNested(ctx,w,h);
+if(st.mode==='symbol')drawSymbolic(ctx,w,h);
+if(st.mode==='inside' && st.sep>.12){drawShell(ctx,w,h,1.04,'rgba(235,193,125,.50)',1.5)}
+}
+function pointIn(p,x,y){let inside=false;for(let i=0,j=p.length-1;i<p.length;j=i++){let a=p[i],b=p[j];if((a.y>y)!=(b.y>y) && x<(b.x-a.x)*(y-a.y)/(b.y-a.y)+a.x)inside=!inside}return inside}
+function faces(){let names=[['Izquierda',0,0],['Derecha',0,3],['Inferior',1,0],['Superior',1,3],['Posterior',2,0],['Frontal',2,3]];let inNames=[['Plano X=1',0,1],['Plano X=2',0,2],['Plano Y=1',1,1],['Plano Y=2',1,2],['Plano Z=1',2,1],['Plano Z=2',2,2]];let panels=st.inside?inNames:names;let root=$('planes');root.innerHTML='';for(let [name,a,k] of panels){let div=document.createElement('div');div.className='plane';let title=document.createElement('h3');title.textContent=name;div.append(title);let mat=document.createElement('div');mat.className='matrix';for(let row=0;row<4;row++)for(let col=0;col<4;col++){let x,y,z;if(a===0){x=k;y=3-row;z=(k===0?col:3-col)}else if(a===1){x=col;y=k;z=(k===0?row:3-row)}else{x=(k===0?3-col:col);y=3-row;z=k}let v=F(x,y,z),b=document.createElement('button');b.className='cell';b.textContent=v;b.dataset.coord=[x,y,z].join(',');b.setAttribute('aria-pressed',st.selected&&st.selected[0]===x&&st.selected[1]===y&&st.selected[2]===z?'true':'false');b.onclick=()=>{st.selected=[x,y,z];$('selected').textContent=`Coordenadas (${x}, ${y}, ${z}) · valor ${v} · octante (${x>>1}, ${y>>1}, ${z>>1}).`;if(!st.inside)redraw();else{st.sep=Math.max(.55,st.sep);$('sep').value=Math.round(st.sep*100);$('seplabel').textContent=Math.round(st.sep*100)+' %';redraw()}faces()};mat.append(b)}div.append(mat);let note=document.createElement('small');note.textContent='Filas, columnas y diagonales = 64';div.append(note);root.append(div)}}
+function checkRegularTetra(){
+ const T=[[[3,0,0],[0,3,0],[0,0,3],[3,3,3]],[[0,3,3],[3,0,3],[3,3,0],[0,0,0]]];
+ for(const tet of T){
+  if(tet.reduce((a,p)=>a+F(...p),0)!==64)return false;
+  for(let i=0;i<4;i++)for(let j=i+1;j<4;j++)if(tet[i].reduce((a,v,k)=>a+(v-tet[j][k])**2,0)!==18)return false;
+  if([0,1,2].some(k=>tet.reduce((a,p)=>a+p[k],0)!==6))return false;
+ }
+ return true;
+}
+function audit(){let goodPlanes=0,odd=0;for(let ax=0;ax<3;ax++)for(let fixed=0;fixed<4;fixed++){let M=[];for(let j=0;j<4;j++){let r=[];for(let i=0;i<4;i++){let q=[i,j];q.splice(ax,0,fixed);r.push(F(...q))}M.push(r)}let sums=[...M.map(r=>r.reduce((a,b)=>a+b,0)),...Array.from({length:4},(_,i)=>M.reduce((a,r)=>a+r[i],0)),M.reduce((a,r,i)=>a+r[i],0),M.reduce((a,r,i)=>a+r[3-i],0)];goodPlanes+=sums.every(s=>s===64);odd+=M.flat().sort((a,b)=>a-b).every((v,i)=>v===2*i+1)}
+let axOk=0,diagOk=0;for(let a=0;a<4;a++)for(let b=0;b<4;b++)for(let dir=0;dir<3;dir++){let s=0;for(let t=0;t<4;t++){let p=dir===0?[t,a,b]:dir===1?[a,t,b]:[a,b,t];s+=F(...p)}axOk+=s===64}for(let ax=0;ax<3;ax++)for(let fixed=0;fixed<4;fixed++)for(let mode=0;mode<2;mode++){let s=0;for(let t=0;t<4;t++){let p=[t,mode?3-t:t];p.splice(ax,0,fixed);s+=F(...p)}diagOk+=s===64}let sd=[];for(let b=0;b<4;b++){let s=0;for(let t=0;t<4;t++)s+=F(t,b&1?3-t:t,b&2?3-t:t);sd.push(s)}sd.sort((a,b)=>a-b);
+let outerInner=0,centerSym=0,axisOnes=0;
+for(let x=0;x<4;x++)for(let y=0;y<4;y++)for(let z=0;z<4;z++)centerSym+=F(x,y,z)===F(3-x,3-y,3-z);
+for(const x of [0,3])for(const y of [0,3])for(const z of [0,3])outerInner+=F(x,y,z)===F(x===0?1:2,y===0?1:2,z===0?1:2);
+for(let t=0;t<4;t++)axisOnes+=F(t,t,t)===1;
+const triA=[[3,0,0],[0,3,0],[0,0,3]],triB=[[0,3,3],[3,0,3],[3,3,0]];
+const triSums=[triA,triB].map(T=>T.reduce((a,v)=>a+F(...v),0));
+let cases=[['12 planos mágicos',goodPlanes===12,goodPlanes+'/12'],['16 impares sin repetir por plano',odd===12,odd+'/12'],['Líneas mágicas',axOk===48&&diagOk===24,(axOk+diagOk)+'/72'],['Diagonales espaciales excepcionales',sd.join(',')==='4,52,76,124',sd.join(', ')],['Simetría central',centerSym===64,centerSym+'/64'],['Cubo interior ↔ exterior',outerInner===8,outerInner+'/8 vértices'],['Eje diagonal con valor 1',axisOnes===4,axisOnes+'/4 puntos'],['Dos triángulos de 63',triSums.every(x=>x===63),triSums.join(' y ')],['Dos tetraedros regulares de suma 64',checkRegularTetra(),'6 aristas de 3√2 y centroide común']];$('audits').innerHTML=cases.map(([name,ok,detail])=>`<div class="audit"><strong class="${ok?'ok':'fail'}">${ok?'✓':'✕'} ${name}</strong> · ${detail}</div>`).join('')}
+function setMode(mode){
+ st.mode=mode;$('mode').value=mode;
+ if(mode==='hex'){st.rx=Math.atan(1/Math.sqrt(2));st.ry=-Math.PI/4;st.sep=0;
+   $('modeInfo').textContent='Vista exacta a lo largo de la diagonal (1,1,1). Las seis esquinas restantes proyectan dos triángulos de 63; los cuatro puntos del eje, todos con valor 1, se superponen en el centro.';
+ }else if(mode==='tetra'){st.rx=.31;st.ry=-.48;st.sep=0;
+   $('modeInfo').textContent='Dos tetraedros REGULARES inscritos en el cubo: cada triángulo de 63 se completa con el 1 del extremo OPUESTO. Las seis aristas miden 3√2, ambos conjuntos suman 64 y comparten el centroide (1,5;1,5;1,5).';
+ }else if(mode==='symbol'){st.rx=.34;st.ry=-.5;st.sep=0;st.triad='both';
+   $('modeInfo').textContent='Lectura simbólica opcional de La Realidad: Naturaleza = cubo exterior; Mente = cubo interior; Consciencia = estrella octángula; 1 = eje diagonal. Cuerpo permanece como capa artística no demostrada.';
+ }else if(mode==='nested'){st.rx=.30;st.ry=-.46;st.sep=0;
+   $('modeInfo').textContent='Los ocho vértices del núcleo {1,2}³ tienen los mismos valores que las esquinas {0,3}³, posición por posición. El tercer cubo «Cuerpo» permanece como lectura artística, no como teorema.';
+ }else if(mode==='inside'){st.sep=.57;
+   $('modeInfo').textContent='Ocho octantes desmontados: las caras interiores corresponden a las secciones X,Y,Z = 1,2. Los grabados del modelo siguen la misma función F.';
+ }else{st.sep=0;
+   $('modeInfo').textContent='Pieza exterior de madera: números impares de 1 a 31, suma 64 en cada línea axial y diagonal plana.';
+ }
+ $('sep').value=Math.round(st.sep*100);$('seplabel').textContent=Math.round(st.sep*100)+' %';redraw();
+}
+function alignAxis(){st.rx=Math.atan(1/Math.sqrt(2));st.ry=-Math.PI/4;redraw()}
+$('mode').onchange=e=>setMode(e.target.value);
+$('presetSolid').onclick=()=>setMode('object');
+$('presetOpen').onclick=()=>setMode('inside');
+$('presetHex').onclick=()=>setMode('hex');
+$('presetTetra').onclick=()=>setMode('tetra');
+$('presetNested').onclick=()=>setMode('nested');$('presetSymbol').onclick=()=>setMode('symbol');
+$('axisView').onclick=()=>{setMode('hex');alignAxis()};
+$('alignAxis').onclick=()=>{setMode('hex');alignAxis()};
+$('showNested').onclick=()=>setMode('nested');
+$('numbers').onclick=()=>{st.nums=!st.nums;$('numbers').setAttribute('aria-pressed',st.nums);redraw()};$('cuts').onclick=()=>{st.cuts=!st.cuts;$('cuts').setAttribute('aria-pressed',st.cuts);redraw()};for(const [id,tag] of [['triBoth','both'],['triA','A'],['triB','B']])$(id).onclick=()=>{st.triad=tag;for(const key of ['triBoth','triA','triB'])$(key).setAttribute('aria-pressed',key===id?'true':'false');if(st.mode!=='hex'&&st.mode!=='tetra')setMode('tetra');else redraw()};
+$('reset').onclick=()=>{st.rx=.48;st.ry=-.76;st.selected=null;setMode('object');faces()};$('sep').oninput=e=>{st.sep=e.target.value/100;$('seplabel').textContent=e.target.value+' %';redraw()};$('outside').onclick=()=>{st.inside=false;$('outside').setAttribute('aria-pressed','true');$('interior').setAttribute('aria-pressed','false');faces()};$('interior').onclick=()=>{st.inside=true;$('outside').setAttribute('aria-pressed','false');$('interior').setAttribute('aria-pressed','true');faces()};
+let pointer=null,cv=$('view');cv.addEventListener('pointerdown',e=>{pointer={id:e.pointerId,x:e.clientX,y:e.clientY,rx:st.rx,ry:st.ry,m:false};cv.setPointerCapture(e.pointerId)});cv.addEventListener('pointermove',e=>{if(!pointer||e.pointerId!==pointer.id)return;let dx=e.clientX-pointer.x,dy=e.clientY-pointer.y;if(Math.abs(dx)+Math.abs(dy)>5)pointer.m=true;st.ry=pointer.ry+dx*.009;st.rx=Math.max(-1.48,Math.min(1.48,pointer.rx+dy*.009));redraw()});cv.addEventListener('pointerup',e=>{if(!pointer||e.pointerId!==pointer.id)return;let moved=pointer.m;pointer=null;if(!moved&&st.mode!=='hex'&&st.mode!=='tetra'&&st.mode!=='nested'){let box=cv.getBoundingClientRect(),x=e.clientX-box.left,y=e.clientY-box.top;for(let i=hits.length-1;i>=0;i--){if(pointIn(hits[i].q,x,y)){let f=hits[i];st.selected=[f.x,f.y,f.z];$('selected').textContent=`Coordenadas (${f.x}, ${f.y}, ${f.z}) · valor ${F(f.x,f.y,f.z)} · octante (${f.x>>1}, ${f.y>>1}, ${f.z>>1}).`;faces();break}}}redraw()});cv.addEventListener('pointercancel',()=>{pointer=null});let busy=false;new ResizeObserver(()=>{if(busy)return;busy=true;requestAnimationFrame(()=>{busy=false;redraw()})}).observe(cv);function fillPairs(){let root=$('cornerPairs');root.textContent='';for(const x of [0,3])for(const y of [0,3])for(const z of [0,3]){const p=[x,y,z],q=p.map(t=>t===0?1:2),v=F(...p);const d=document.createElement('div');d.className='pair';const a=document.createElement('small');a.textContent=`(${p.join(',')}) ↔ (${q.join(',')})`;const b=document.createElement('b');b.textContent=`${v} = ${F(...q)}`;d.append(a,b);root.append(d)}}
+fillPairs();audit();faces();redraw();
+})();
+
+  </script>
+</body>
+</html>

@@ -8,11 +8,11 @@ Página web estática e interactiva para presentar el proyecto *Cubo 64*: una re
 
 ## Ver la web
 
-Abre `index.html` para la versión en español o `en.html` para leer toda la web en inglés, incluidos los controles del visor, la guía y las auditorías. Puedes cambiar de idioma con el selector **ES / EN**. No necesita servidor, dependencias, conexión a Internet ni compilación. Se puede publicar directamente con GitHub Pages.
+Abre `index.html` para la versión en español o `en.html` para leer toda la web en inglés, incluidos los controles del visor, la guía y las auditorías. Puedes cambiar de idioma con el selector **ES / EN**. No necesita servidor, dependencias, conexión a Internet ni compilación.
 
 ## Fundamentos conceptuales (ES / EN)
 
-Se ha integrado un recorrido interactivo a partir de *La Realidad Interactiva*, que conecta dualidad, coherencia semántica, equilibrio, síntesis, espacio, tiempo y percepción con IA_m, Semantic Diffraction, Structural Coherence Audit, Q12 y el Cubo64. Mantiene separadas la interpretación filosófica y las propiedades comprobables.
+El recorrido interactivo, basado en *La Realidad Interactiva*, conecta dualidad, coherencia semántica, equilibrio, síntesis, espacio, tiempo y percepción con IA_m, Semantic Diffraction, Structural Coherence Audit, Q12 y el Cubo64. Mantiene separadas la interpretación filosófica y las propiedades comprobables.
 
 - [Fundamentos interactivos en español](fundamentos.html) — recorrido completo, con un laboratorio ampliado de balance de dos polos y una matriz GF(4) calculada.
 - [Conceptual foundations in English](foundations.html) — introducción autónoma en inglés con el mismo laboratorio y un ejemplo de matriz mágica.
@@ -77,14 +77,6 @@ python3 verificar.py
 
 No se necesitan paquetes externos. La auditoría incluye los ocho octantes de suma 128 y las 256 igualdades de la simetría de traslación diagonal (64 puntos × 4 desplazamientos).
 
-## Publicar en GitHub Pages
-
-1. Crea un repositorio nuevo en GitHub (por ejemplo `cubo-64`).
-2. Sube los archivos `index.html`, `README.md` y `verificar.py` a la rama principal (`main`).
-3. Ve a **Settings → Pages → Build and deployment**.
-4. Elige **Deploy from a branch**, rama `main`, carpeta `/ (root)` y guarda.
-5. GitHub mostrará la dirección pública de tu página al terminar el despliegue.
-
 ## Créditos y alcance
 
 - **Idea e investigación:** Sergi Garcia Mecinas.
@@ -94,5 +86,3 @@ No se necesitan paquetes externos. La auditoría incluye los ocho octantes de su
 La pieza principal es finita. La rama fractal relacionada requiere definir expresamente una iteración de 4×4×4 subdivisiones conservando las 60 posiciones no nulas de G: bajo esa construcción autosimilar, el soporte límite tiene dimensión log₄(60); no es una propiedad automática del cubo F sin iterar.
 
 El proyecto presenta una construcción matemática reproducible y una lectura filosófica personal. No pretende demostrar una teoría física de la consciencia, del universo ni de la geometría sagrada. El modelo tridimensional es una visualización interactiva de la construcción algebraica, sus simetrías y sus relaciones geométricas.
-
-**Licencia:** pendiente de elección por el autor. No se incluye una licencia automática.

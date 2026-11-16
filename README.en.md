@@ -10,11 +10,11 @@ Cubo 64 is an interactive 4 × 4 × 4 grid consisting of **64 positions**. One a
 
 Open `en.html` in a modern browser. The 3D viewer, mathematical proof, audit results, eight-step guide and symbolic section are translated into English. Use **ES / EN** in the navigation to change languages.
 
-The site is standalone HTML and JavaScript: no build tools, external dependencies or internet connection are needed once the files are downloaded. GitHub Pages can serve `index.html` as the Spanish home page, with `en.html` as the English edition.
+The site is standalone HTML and JavaScript: no build tools, external dependencies or internet connection are needed once the files are downloaded.
 
 ## Conceptual foundations (English and Spanish)
 
-The published site now connects the conceptual research with the mathematically reproducible Cubo64 construction without treating one as a proof of the other.
+The site presents the conceptual research alongside the mathematically reproducible Cubo64 construction without treating one as a proof of the other.
 
 - [Conceptual foundations (English)](foundations.html) — duality, semantic coherence, equilibrium, synthesis, space, change and perception; a live two-pole scoring experiment and a real GF(4) section.
 - [Fundamentos interactivos (Spanish)](fundamentos.html) — extended interactive essay relating IA_m, Semantic Diffraction, Structural Coherence Audit, Q12, and Cubo64.
@@ -104,5 +104,3 @@ A separate branch considers the continuous family `Fλ = 16 + λ(F − 16)`. At 
 - **Symbolic layer:** Nature, Mind, Consciousness, complementarity and balance are philosophical interpretations, not claims established by the mathematical construction.
 
 These conceptual links are not presented as proved mathematical equivalences between the projects. The work does not claim to establish a physical theory of consciousness or the universe.
-
-**License:** the author has not yet selected a license. No automatic open-source license is granted.
